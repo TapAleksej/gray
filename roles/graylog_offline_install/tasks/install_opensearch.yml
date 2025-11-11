@@ -1,0 +1,44 @@
+---
+# Установка OpenSearch
+
+- name: Check if local OpenSearch package exists
+  stat:
+    path: "{{ playbook_dir }}/roles/graylog_offline_install/files/{{ opensearch_rpms[0] }}"
+  register: opensearch_local_file
+
+- name: Install OpenSearch locally (offline)
+  block:
+    - name: Copy local OpenSearch RPM
+      copy:
+        src: "{{ opensearch_rpms[0] }}"
+        dest: /tmp/
+
+
+- name: Install OpenSearch RPM with password
+  become: true
+  environment:
+    OPENSEARCH_INITIAL_ADMIN_PASSWORD: "{{ opensearch_admin_password }}"
+  command: "dnf install -y /tmp/{{ opensearch_rpms[0] }}"
+  when: opensearch_local_file.stat.exists
+
+# ----------------------------
+# Настройка конфигурации
+# ----------------------------
+
+- name: Copy OpenSearch config script
+  become: true
+  copy:
+    src: "../scripts/opensearch_config.sh"
+    dest: "/usr/local/bin/opensearch_config.sh"
+    mode: '0755'
+
+- name: Run OpenSearch config script
+  become: true
+  command: bash /usr/local/bin/opensearch_config.sh
+
+- name: Enable and start OpenSearch
+  systemd:
+    name: opensearch
+    enabled: true
+    state: restarted
+

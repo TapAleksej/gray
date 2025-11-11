@@ -1,0 +1,8 @@
+---
+# Установка зависимостей через DNF или локально
+
+- name: Install dependencies via DNF
+  dnf:
+    name: "{{ packages }}"
+    state: present
+  when: ansible_pkg_mgr == "dnf"

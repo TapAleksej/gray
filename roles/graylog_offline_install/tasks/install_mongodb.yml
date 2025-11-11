@@ -1,0 +1,44 @@
+---
+# Установка MongoDB (локально или онлайн)
+
+- name: Check if local MongoDB packages exist
+  delegate_to: localhost
+  stat:
+    path: "{{ local_repo_dir }}/{{ item }}"
+  register: mongodb_local_files
+  loop: "{{ mongodb_rpms }}"
+
+- name: Install MongoDB locally (offline)
+  become: true
+  block:
+    - name: Copy local MongoDB RPMs
+      delegate_to: localhost
+      copy:
+        src: "{{ local_repo_dir }}/{{ item.item }}"
+        dest: /tmp/
+      loop: "{{ mongodb_local_files.results }}"
+      when: item.stat.exists
+
+    - name: Install MongoDB RPMs
+      command: "dnf install -y /tmp/{{ item.item }}"
+      loop: "{{ mongodb_local_files.results }}"
+      when: item.stat.exists
+
+- name: Enable and start MongoDB
+  become: true
+  systemd:
+    name: mongod
+    enabled: true
+    state: started
+
+- name: Check MongoDB is reachable
+  uri:
+    url: "http://localhost:27017"
+    status_code: 200
+    validate_certs: no
+  register: mongo_check
+  ignore_errors: yes
+
+- debug:
+    msg: "MongoDB is up and reachable"
+  when: mongo_check.status == 200

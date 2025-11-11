@@ -1,0 +1,7 @@
+---
+# handlers file for roles/graylog_offline_install
+- name: restart nginx
+  become: true
+  systemd:
+    name: nginx
+    state: restarted

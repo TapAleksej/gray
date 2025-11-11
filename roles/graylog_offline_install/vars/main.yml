@@ -1,0 +1,56 @@
+---
+# vars file for graylog_offline_install
+
+packages:
+  - java-11-openjdk
+  - pwgen
+  - dnf-utils
+  - curl
+  - git
+  - gnupg2
+  - nginx
+
+
+opensearch_version: "2.9.0"
+
+graylog_local_rpms:
+  - "graylog-5.2-repository_latest.rpm"
+  - "graylog-server-5.2.12-1.x86_64.rpm"
+
+mongodb_rpms:
+  - "mongodb-org-server-7.0.24-1.el7.x86_64.rpm"
+  - "mongodb-org-shell-7.0.24-1.el7.x86_64.rpm"
+  - "mongodb-org-mongos-7.0.24-1.el7.x86_64.rpm"
+  - "mongodb-org-tools-100.9.4-1.el7.x86_64.rpm"
+
+local_repo_dir: "{{ playbook_dir }}/roles/graylog_offline_install/files"
+
+opensearch_rpms:
+  #- "opensearch-{{ opensearch_version }}-linux-x64.rpm"
+  - "opensearch-2.9.0-linux-x64.rpm"
+# Настройки opensearch
+cluster_name: "graylog"
+node_name: "{{ ansible_hostname }}"
+opensearch_admin_password: '9jHvv<:UM&1_:1'
+
+graylog_local_dir: "/etc/graylog/server"
+
+# Настройки Graylog
+graylog_root_user: "admin"
+graylog_root_password: "Qwadro4x4"
+#graylog_root_password_sha2: "cdfa816c95e6b82d2c343b350468e4c39fe15b57eec8fca84f75535698490437"
+
+graylog_http_bind_address: "0.0.0.0:9000"
+graylog_http_publish_uri: "http://{{ ansible_default_ipv4.address }}:9000/"
+graylog_mongodb_uri: "mongodb://127.0.0.1:27017/graylog"
+graylog_opensearch_hosts: "http://127.0.0.1:9200"
+
+nginx_log_directory: "/var/log/graylog"
+nginx_proxy_pass: "http://127.0.0.1:9000/"
+nginx_conf_path: "/etc/nginx/conf.d/default.conf"
+
+
+ssl_certificate: "/etc/nginx/graylog.crt"
+ssl_certificate_key: "/etc/nginx/graylog.key"
+
+graylog_service_name: "graylog-server"
