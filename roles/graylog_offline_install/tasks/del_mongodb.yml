@@ -1,0 +1,42 @@
+---
+
+- name: Stop MongoDB if running
+  become: true
+  systemd:
+    name: mongod
+    state: stopped
+  ignore_errors: true
+
+- name: Remove MongoDB packages
+  become: true
+  package:
+    name:
+      - mongodb-org
+      - mongodb-org-server
+      - mongodb-org-shell
+      - mongodb-org-mongos
+      - mongodb-org-tools
+    state: absent
+  ignore_errors: true
+
+- name: Remove MongoDB data directory
+  become: true
+  file:
+    path: /var/lib/mongo
+    state: absent
+  ignore_errors: true
+
+- name: Remove MongoDB log directory
+  become: true
+  file:
+    path: /var/log/mongodb
+    state: absent
+  ignore_errors: true
+
+- name: Remove MongoDB config file
+  become: true
+  file:
+    path: /etc/mongod.conf
+    state: absent
+  ignore_errors: true
+

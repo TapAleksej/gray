@@ -1,42 +1,22 @@
 ---
-# ===============================
-# УСТАНОВКА GRAYLOG ИЗ ЛОКАЛЬНЫХ RPM
-# ===============================
+# Установка Graylog локально из RPM-файлов
 
-# --- Удаляем предыдущую версию ---
-- name: Remove old Graylog installation if exists
-  become: true
-  package:
-    name: graylog-server
-    state: absent
-  ignore_errors: true
-
-- name: Remove old Graylog repo file if exists
-  become: true
-  file:
-    path: /etc/yum.repos.d/graylog.repo
-    state: absent
-  ignore_errors: true
-
-
-# --- Копируем RPM на машину ---
 - name: Copy Graylog RPM packages to target host
   become: true
   copy:
     src: "{{ item }}"
     dest: /tmp/
-  loop: "{{ graylog_local_rpms }}"
+  with_items: "{{ graylog_local_rpms }}"
 
-
-# --- Устанавливаем RPM без GPG проверки ---
-- name: Install Graylog packages locally (offline, nogpgcheck)
+- name: Install Graylog packages locally
   become: true
-  command: "dnf install -y --nogpgcheck /tmp/{{ item }}"
+  package:
+    name: "/tmp/{{ item }}"
+    state: present
   loop: "{{ graylog_local_rpms }}"
 
-# ===============================
-# НАСТРОЙКА GRAYLOG
-# ===============================
+# Настройка Graylog
+
 
 - name: Ensure /etc/graylog/server directory exists
   become: true
@@ -47,13 +27,12 @@
     group: graylog
     mode: '0750'
 
-
-# --- Генерация секретного ключа ---
 - name: Ensure pwgen is installed
   become: true
   package:
     name: pwgen
     state: present
+
 
 - name: Generate Graylog password secret
   become: true
@@ -61,25 +40,26 @@
   register: graylog_secret
   changed_when: false
 
+
 - name: Set fact for password secret
   set_fact:
     graylog_password_secret: "{{ graylog_secret.stdout }}"
 
 
-# --- Генерация SHA256 пароля admin ---
+#password hash
+
 - name: Generate SHA2 hash for Graylog admin password
   shell: "echo -n '{{ graylog_root_password }}' | sha256sum"
   register: graylog_password_hash
   changed_when: false
+
 
 - name: Set Graylog password hash fact
   set_fact:
     graylog_root_password_sha2: "{{ graylog_password_hash.stdout.split()[0] }}"
 
 
-# --- Конфигурация Graylog ---
 - name: Template Graylog configuration file
-  become: true
   template:
     src: graylog.conf.j2
     dest: "{{ graylog_local_dir }}/server.conf"
@@ -87,8 +67,9 @@
     group: root
     mode: '0644'
 
+#- name: Check if environment is ready before starting Graylog
+#  include_tasks: validation.yml
 
-# --- Запуск Graylog ---
 - name: Ensure Graylog service is enabled and started
   become: true
   systemd:

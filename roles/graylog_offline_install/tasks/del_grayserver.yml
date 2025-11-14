@@ -1,0 +1,29 @@
+---
+
+- name: Stop Graylog service if installed
+  become: true
+  systemd:
+    name: graylog-server
+    state: stopped
+  ignore_errors: true
+
+- name: Remove Graylog package if installed
+  become: true
+  package:
+    name: graylog-server
+    state: absent
+  ignore_errors: true
+
+- name: Remove old Graylog config directory
+  become: true
+  file:
+    path: /etc/graylog/server
+    state: absent
+  ignore_errors: true
+
+- name: Remove old Graylog data directory
+  become: true
+  file:
+    path: /var/lib/graylog-server
+    state: absent
+  ignore_errors: true

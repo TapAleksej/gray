@@ -1,0 +1,38 @@
+---
+
+- name: Stop OpenSearch service if installed
+  become: true
+  systemd:
+    name: opensearch
+    state: stopped
+  ignore_errors: true
+
+- name: Remove OpenSearch package if installed
+  become: true
+  package:
+    name: opensearch
+    state: absent
+  ignore_errors: true
+
+- name: Remove old OpenSearch data directory
+  become: true
+  file:
+    path: /var/lib/opensearch
+    state: absent
+  ignore_errors: true
+
+- name: Remove old OpenSearch config directory
+  become: true
+  file:
+    path: /etc/opensearch
+    state: absent
+  ignore_errors: true
+
+- name: Remove old OpenSearch logs
+  become: true
+  file:
+    path: /var/log/opensearch
+    state: absent
+  ignore_errors: true
+
+
