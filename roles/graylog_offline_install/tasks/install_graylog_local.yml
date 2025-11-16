@@ -1,7 +1,4 @@
 ---
-# ===============================
-# УСТАНОВКА GRAYLOG ИЗ ЛОКАЛЬНЫХ RPM
-# ===============================
 
 # --- Удаляем предыдущую версию ---
 - name: Remove old Graylog installation if exists
@@ -19,7 +16,7 @@
   ignore_errors: true
 
 
-# --- Копируем RPM на машину ---
+
 - name: Copy Graylog RPM packages to target host
   become: true
   copy:
@@ -28,7 +25,7 @@
   loop: "{{ graylog_local_rpms }}"
 
 
-# --- Устанавливаем RPM без GPG проверки ---
+
 - name: Install Graylog packages locally (offline, nogpgcheck)
   become: true
   command: "dnf install -y --nogpgcheck /tmp/{{ item }}"
@@ -48,7 +45,7 @@
     mode: '0750'
 
 
-# --- Генерация секретного ключа ---
+
 - name: Ensure pwgen is installed
   become: true
   package:
