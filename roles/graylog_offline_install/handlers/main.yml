@@ -1,7 +1,22 @@
 ---
 # handlers file for roles/graylog_offline_install
+- name: test nginx config
+  become: true
+  command: nginx -t
+  register: nginx_test
+  changed_when: false
+  failed_when: nginx_test.rc != 0
+
 - name: restart nginx
   become: true
   systemd:
     name: nginx
     state: restarted
+
+
+- name: restart graylog
+  become: true
+  systemd:
+    name: graylog-server
+    state: restarted
+

@@ -13,10 +13,10 @@ packages:
   - nginx
 
 
+
 graylog_local_rpms:
-  - "graylog-4.3-repository_latest.rpm"
   - "graylog-server-4.3.15-1.noarch.rpm"
-  #- "graylog-server-5.2.12-1.x86_64.rpm"
+
 
 mongodb_rpms:
   - mongodb-org-server-4.4.29-1.el7.x86_64.rpm
@@ -26,7 +26,7 @@ mongodb_rpms:
   - mongodb-org-database-tools-extra-4.4.29-1.el8.x86_64.rpm
 
 
-mongodb_url_connect: "http://localhost:27017"
+#mongodb_url_connect: "http://localhost:27017"
 
 local_repo_dir: "{{ playbook_dir }}/roles/graylog_offline_install/files"
 
@@ -38,10 +38,10 @@ opensearch_rpms:
 
 
 cluster_name: "graylog"
-#node_name: "{{ ansible_hostname }}"
+
 opensearch_admin_password: 'Opticum123!@'
 
-opensearch_script: "/usr/local/bin/opensearch_config2.sh"
+opensearch_script: "/usr/local/bin/opensearch_config.sh"
 
 
 graylog_local_dir: "/etc/graylog/server"
@@ -50,14 +50,14 @@ graylog_local_dir: "/etc/graylog/server"
 graylog_root_user: "admin"
 graylog_root_password: "Qwadro4x4"
 
-
-
 graylog_http_bind_address: "127.0.0.1:9000"
-#graylog_http_publish_uri: "https://{{ ansible_default_ipv4.address }}/"
-graylog_http_publish_uri: "https://88.214.34.49:9000/"
+
+graylog_http_publish_uri: "http://{{ ansible_default_ipv4.address }}:9000/"
 
 graylog_mongodb_uri: "mongodb://127.0.0.1:27017/graylog"
-graylog_opensearch_hosts: "http://127.0.0.1:9200"
+
+graylog_opensearch_hosts:
+  - "http://127.0.0.1:9200"
 
 nginx_log_directory: "/var/log/graylog"
 nginx_proxy_pass: "http://127.0.0.1:9000/"

@@ -14,8 +14,8 @@
 - name: Install OpenSearch
   include_tasks: install_opensearch.yml
 
-#- name: Install Graylog
-#  include_tasks: install_graylog_local.yml
+- name: Install Graylog
+  include_tasks: install_graylog_local.yml
 
 #- name: Allow port firewall
 #  include_tasks: firewall.yml

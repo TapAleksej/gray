@@ -45,7 +45,9 @@
     mode: '0750'
 
 
-
+# -----------------------------------------------------
+# СЕКРЕТЫ И ХЕШИ
+# -----------------------------------------------------
 - name: Ensure pwgen is installed
   become: true
   package:
@@ -83,7 +85,7 @@
     owner: root
     group: root
     mode: '0644'
-
+  notify: restart graylog
 
 # --- Запуск Graylog ---
 - name: Ensure Graylog service is enabled and started

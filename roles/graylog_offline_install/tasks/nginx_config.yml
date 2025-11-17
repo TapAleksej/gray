@@ -31,12 +31,12 @@
     mode: '0644'
   notify: restart nginx
 
-
+#-subj "/CN={{ inventory_hostname }}"
 - name: Generate self-signed SSL certificate for Graylog
   become: true
   command: >
     openssl req -x509 -nodes -days 365
-    -subj "/CN={{ inventory_hostname }}"
+    -subj "/CN={{ ansible_default_ipv4.address }}"
     -newkey rsa:2048
     -keyout "{{ ssl_certificate_key }}"
     -out "{{ ssl_certificate }}"
@@ -51,7 +51,9 @@
     src: nginx.conf.j2
     dest: "{{ nginx_conf_path }}"
     mode: '0644'
-  notify: restart nginx
+  notify:
+    - test nginx config
+    - restart nginx
 
 
 - name: Ensure Nginx is enabled and started
