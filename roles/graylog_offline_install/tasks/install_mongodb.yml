@@ -1,26 +1,35 @@
 ---
-# Установка MongoDB (локально или онлайн)
+# Установка MongoDB (локально)
 
 - name: Check if local MongoDB packages exist
-  delegate_to: localhost
   stat:
     path: "{{ local_repo_dir }}/{{ item }}"
   register: mongodb_local_files
   loop: "{{ mongodb_rpms }}"
 
-- name: Install MongoDB locally (offline)
+
+- name: Import MongoDB GPG key
+  rpm_key:
+    state: present
+    key: "{{ local_repo_dir }}/server-4.4.asc"
+
+# Копирование и установка
+- name: Install MongoDB (offline, via loop)
   become: true
   block:
-    - name: Copy local MongoDB RPMs
-      delegate_to: localhost
+
+    - name: Copy MongoDB RPM to /tmp
       copy:
         src: "{{ local_repo_dir }}/{{ item.item }}"
         dest: /tmp/
       loop: "{{ mongodb_local_files.results }}"
       when: item.stat.exists
 
-    - name: Install MongoDB RPMs
-      command: "dnf install -y /tmp/{{ item.item }}"
+    - name: Install MongoDB RPMs one-by-one (preserves dependency order)
+      dnf:
+        name: "/tmp/{{ item.item }}"
+        state: present
+        disable_gpg_check: false
       loop: "{{ mongodb_local_files.results }}"
       when: item.stat.exists
 
@@ -31,17 +40,10 @@
     enabled: true
     state: started
 
-- name: Check MongoDB is reachable
-  uri:
-    url: "{{ mongodb_url_connect }}"
-    status_code: 200
-    validate_certs: no
-  register: mongo_check
+- name: Check MongoDB is running
+  become: true
+  command: "mongo --eval 'db.runCommand({ ping: 1 })'"
+  register: mongo_ping
   retries: 10
   delay: 5
-  until: mongo_check.status == 200
-  ignore_errors: yes
-
-- debug:
-    msg: "MongoDB is up and reachable"
-  when: mongo_check.status == 200
+  until: mongo_ping.rc == 0
