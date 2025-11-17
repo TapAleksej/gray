@@ -1,7 +1,7 @@
 ---
 
-- name: UNInstall del_grayserver
-  include_tasks: del_grayserver.yml
+#- name: UNInstall del_grayserver
+#  include_tasks: del_grayserver.yml
 
 - name: UNInstall del_opensearh.yml
   include_tasks: del_opensearh.yml

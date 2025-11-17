@@ -33,10 +33,13 @@
 
 - name: Check MongoDB is reachable
   uri:
-    url: "http://localhost:27017"
+    url: "{{ mongodb_url_connect }}"
     status_code: 200
     validate_certs: no
   register: mongo_check
+  retries: 10
+  delay: 5
+  until: mongo_check.status == 200
   ignore_errors: yes
 
 - debug:

@@ -2,8 +2,8 @@
 # Основной сценарий роли graylog_offline_install
 
 #del_grayserver.yml
-#- name: Uninstall
-#  include_tasks: uninstall.yaml
+- name: Delete old installation
+  include_tasks: uninstall.yaml
 
 - name: Install dependencies
   include_tasks: install_dependencies.yml

@@ -10,8 +10,20 @@ root_timezone = UTC
 http_bind_address = {{ graylog_http_bind_address }}
 http_publish_uri = {{ graylog_http_publish_uri }}
 
+# OpenSearch connection
 opensearch_hosts = {{ graylog_opensearch_hosts }}
 opensearch_version = 2
+opensearch_ssl_verify = false
+
+# Auth
+opensearch_username = admin
+opensearch_password = admin
+
+
+
+# Отключить datanode
+datanode_enabled = false
+
 
 mongodb_uri = {{ graylog_mongodb_uri }}
 mongodb_max_connections = 1000

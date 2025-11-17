@@ -7,6 +7,7 @@
   register: opensearch_local_file
 
 - name: Install OpenSearch locally (offline)
+  when: opensearch_local_file.stat.exists
   block:
     - name: Copy local OpenSearch RPM
       copy:
@@ -28,13 +29,13 @@
 - name: Copy OpenSearch config script
   become: true
   copy:
-    src: "../scripts/opensearch_config.sh"
-    dest: "/usr/local/bin/opensearch_config.sh"
+    src: "../scripts/opensearch_config2.sh"
+    dest: "{{ opensearch_script }}"
     mode: '0755'
 
 - name: Run OpenSearch config script
   become: true
-  command: bash /usr/local/bin/opensearch_config.sh
+  command: "bash {{ opensearch_script }}"
 
 - name: Enable and start OpenSearch
   systemd:

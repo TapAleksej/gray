@@ -36,3 +36,14 @@ Author Information
 ------------------
 
 An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+
+
+opensearch_hosts = {{ graylog_opensearch_hosts }}
+opensearch_version = 2
+opensearch_username = admin
+opensearch_password = {{ opensearch_admin_password }}
+opensearch_ssl_verify = false
+
+opensearch_username = admin
+opensearch_password = {{ opensearch_admin_password }}
+opensearch_ssl_verify = false
