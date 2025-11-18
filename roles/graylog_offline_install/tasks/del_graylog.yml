@@ -1,0 +1,89 @@
+---
+---
+# ==========================================
+#   FULL GRAYLOG UNINSTALL (SAFE & CLEAN)
+# ==========================================
+
+- name: Stop Graylog service
+  become: true
+  systemd:
+    name: graylog-server
+    state: stopped
+    enabled: false
+  ignore_errors: true
+
+
+# ========================
+# REMOVE PACKAGES
+# ========================
+
+- name: Remove Graylog package
+  become: true
+  package:
+    name: graylog-server
+    state: absent
+  ignore_errors: true
+
+
+# ========================
+# REMOVE CONFIGS, LOGS
+# ========================
+
+- name: Remove Graylog configuration directory
+  become: true
+  file:
+    path: /etc/graylog
+    state: absent
+  ignore_errors: true
+
+- name: Remove Graylog server directory
+  become: true
+  file:
+    path: /usr/share/graylog-server
+    state: absent
+  ignore_errors: true
+
+- name: Remove /var/lib/graylog-server
+  become: true
+  file:
+    path: /var/lib/graylog-server
+    state: absent
+  ignore_errors: true
+
+- name: Remove Graylog logs
+  become: true
+  file:
+    path: /var/log/graylog-server
+    state: absent
+  ignore_errors: true
+
+
+# ========================
+# REMOVE TMP FILES, RPMs
+# ========================
+
+- name: Remove any uploaded Graylog RPMs from /tmp
+  become: true
+  file:
+    path: "/tmp/{{ item | basename }}"
+    state: absent
+  loop: "{{ graylog_local_rpms | default([]) }}"
+  ignore_errors: true
+
+
+# ========================
+# REMOVE SYSTEMD UNIT (IF PRESENT)
+# ========================
+
+- name: Remove custom systemd unit if exists
+  become: true
+  file:
+    path: /etc/systemd/system/graylog-server.service
+    state: absent
+  ignore_errors: true
+
+- name: Reload systemd daemon
+  become: true
+  systemd:
+    daemon_reload: true
+  ignore_errors: true

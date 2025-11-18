@@ -1,0 +1,14 @@
+---
+- name: Copy Elasticsearch RPM
+    copy:
+      src: "{{ elastic_rpm }}"
+      dest: /tmp/
+
+- name: Install Elasticsearch offline
+  command: "dnf install -y --nogpgcheck /tmp/{{ elastic_rpm }}"
+
+- name: Enable Elasticsearch
+  systemd:
+    name: elasticsearch
+    enabled: true
+    state: started

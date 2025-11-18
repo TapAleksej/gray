@@ -6,6 +6,5 @@
 - name: Uninstall mongodb
   include_tasks: del_mongodb.yml
 
-- name: UNInstall del_opensearh.yml
-  include_tasks: del_opensearh.yml
-
+- name: UNInstall elasticsearch
+  include_tasks: del_elasticsearch.yml

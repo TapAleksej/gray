@@ -2,14 +2,11 @@
 # Graylog Server Configuration
 #############################
 
-# Узел является master
 is_master = true
-
-# Файл идентификатора ноды
 node_id_file = {{ graylog_local_dir }}/node-id
 
 #############################
-# Аутентификация
+# Authentication
 #############################
 
 password_secret = {{ graylog_password_secret }}
@@ -26,6 +23,7 @@ http_publish_uri = {{ graylog_http_publish_uri }}
 
 rest_enable_cors = true
 rest_enable_gzip = true
+http_enable_cors = true
 
 #############################
 # MongoDB
@@ -36,20 +34,12 @@ mongodb_max_connections = 1000
 mongodb_threads_allowed_to_block_multiplier = 5
 
 #############################
-# OpenSearch (Search Backend)
+# Elasticsearch 7.10.2
 #############################
 
-# Хост OpenSearch
-opensearch_hosts =  {{ graylog_opensearch_hosts | join(',') }}
-
-# ВАЖНО — версия OpenSearch 1.x
-opensearch_version = 1
-
-opensearch_ssl_verify = false
-
-# Логин/пароль
-opensearch_username = admin
-opensearch_password = "{{ opensearch_admin_password }}"
+elasticsearch_hosts = http://127.0.0.1:9200
+elasticsearch_version = 7
+elasticsearch_ssl_verify = false
 
 #############################
 # Message Journal
@@ -70,20 +60,8 @@ processor_wait_strategy = blocking
 ring_size = 65536
 
 #############################
-# Misc Graylog Settings
+# Other
 #############################
 
-# Отключаем DataNode (нужно для GL 5.x, но для 4.3 нет)
-datanode_enabled = false
-
-lb_recognition_period_seconds = 3
-gc_warning_threshold = 1s
-http_enable_cors = true
 allow_highlighting = true
-
-#############################
-# Logging
-#############################
-# *Включается через отдельный лог4j файл (не здесь)*
-#############################
-
+gc_warning_threshold = 1s

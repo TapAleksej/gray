@@ -1,7 +1,7 @@
 ---
 # Основной сценарий роли graylog_offline_install
 
-#del_grayserver.yml
+
 - name: Delete old installation
   include_tasks: uninstall.yaml
 
@@ -11,15 +11,15 @@
 - name: Install MongoDB
   include_tasks: install_mongodb.yml
 
-- name: Install OpenSearch
-  include_tasks: install_opensearch.yml
+- name: Install elasticsearch
+  include_tasks: install_elasticsearch.yml
 
 - name: Install Graylog
   include_tasks: install_graylog_local.yml
 
-#- name: Allow port firewall
-#  include_tasks: firewall.yml
+- name: Allow port firewall
+  include_tasks: firewall.yml
 
-#- name: Configure nginx
-#  include_tasks: nginx_config.yml
+- name: Configure nginx
+  include_tasks: nginx_config.yml
 

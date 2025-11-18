@@ -1,22 +1,5 @@
 ---
 
-# --- Удаляем предыдущую версию ---
-- name: Remove old Graylog installation if exists
-  become: true
-  package:
-    name: graylog-server
-    state: absent
-  ignore_errors: true
-
-- name: Remove old Graylog repo file if exists
-  become: true
-  file:
-    path: /etc/yum.repos.d/graylog.repo
-    state: absent
-  ignore_errors: true
-
-
-
 - name: Copy Graylog RPM packages to target host
   become: true
   copy:
@@ -30,6 +13,8 @@
   become: true
   command: "dnf install -y --nogpgcheck /tmp/{{ item }}"
   loop: "{{ graylog_local_rpms }}"
+
+
 
 # ===============================
 # НАСТРОЙКА GRAYLOG
@@ -67,6 +52,7 @@
 
 # --- Генерация SHA256 пароля admin ---
 - name: Generate SHA2 hash for Graylog admin password
+  become: true
   shell: "echo -n '{{ graylog_root_password }}' | sha256sum"
   register: graylog_password_hash
   changed_when: false
@@ -74,6 +60,29 @@
 - name: Set Graylog password hash fact
   set_fact:
     graylog_root_password_sha2: "{{ graylog_password_hash.stdout.split()[0] }}"
+
+
+
+# =======================
+# RUN GRAYLOG AFTER ES+MONGO
+# =======================
+
+- name: Wait for Elasticsearch to respond
+  uri:
+    url: "http://127.0.0.1:9200"
+    method: GET
+    status_code: 200
+  register: es_status
+  retries: 20
+  delay: 3
+  until: es_status.status == 200
+
+- name: Wait for MongoDB port
+  wait_for:
+    host: "127.0.0.1"
+    port: 27017
+    delay: 2
+    timeout: 30
 
 
 # --- Конфигурация Graylog ---
