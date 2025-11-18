@@ -50,7 +50,7 @@ graylog_local_dir: "/etc/graylog/server"
 graylog_root_user: "admin"
 graylog_root_password: "Qwadro4x4"
 
-graylog_http_bind_address: "127.0.0.1:9000"
+graylog_http_bind_address: "http://127.0.0.1:9000"
 
 graylog_http_publish_uri: "http://{{ ansible_default_ipv4.address }}:9000/"
 
