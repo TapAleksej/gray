@@ -3,16 +3,6 @@
 # - java-11-openjdk
 
 
-#packages:
-#  - java-11-openjdk-headless
-#  - pwgen
-#  - dnf-utils
-#  - curl
-#  - git
-#  - gnupg2
-#  - nginx
-#  - python
-
 packages:
   - java-11-openjdk-headless
   - pwgen
@@ -53,7 +43,7 @@ graylog_root_user: "admin"
 graylog_root_password: "Qwadro4x4"
 
 # HTTP bind/publish
-graylog_http_bind_address: "127.0.0.1:9000"
+graylog_http_bind_address: "0.0.0.0:9000"
 graylog_http_publish_uri: "http://{{ ansible_default_ipv4.address }}:9000/"
 
 # MongoDB
@@ -68,3 +58,5 @@ ssl_certificate: "/etc/nginx/graylog.crt"
 ssl_certificate_key: "/etc/nginx/graylog.key"
 
 graylog_service_name: "graylog-server"
+
+plugin_dir: "/usr/share/graylog-server/plugin"
