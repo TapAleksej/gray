@@ -16,8 +16,12 @@ packages:
   - python3-policycoreutils
 
 
+
 graylog_local_rpms:
   - "graylog-server-4.3.15-1.noarch.rpm"
+  - "graylog-integrations-plugins-4.3.15-1.noarch.rpm"
+  - "graylog-enterprise-plugins-4.3.15-1.x86_64.rpm"
+  - "graylog-enterprise-integrations-plugins-4.3.15-1.noarch.rpm"
 
 
 mongodb_rpms:
@@ -32,6 +36,7 @@ mongodb_rpms:
 
 local_repo_dir: "{{ playbook_dir }}/roles/graylog_offline_install/files"
 cluster_name: "graylog"
+
 
 
 elastic_rpm: "elasticsearch-7.10.2-x86_64.rpm"
