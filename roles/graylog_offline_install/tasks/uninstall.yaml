@@ -1,7 +1,10 @@
 ---
 
-#- name: UNInstall del_grayserver
-#  include_tasks: del_grayserver.yml
+#- name: UNInstall opensearh
+#  include_tasks: del_opensearh.yml
+
+- name: UNInstall del_grayserver
+  include_tasks: del_graylog.yml
 
 - name: Uninstall mongodb
   include_tasks: del_mongodb.yml

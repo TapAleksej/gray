@@ -1,8 +1,4 @@
 ---
----
-# ==========================================
-#   FULL GRAYLOG UNINSTALL (SAFE & CLEAN)
-# ==========================================
 
 - name: Stop Graylog service
   become: true
@@ -81,6 +77,22 @@
     path: /etc/systemd/system/graylog-server.service
     state: absent
   ignore_errors: true
+
+
+- name: Clean old Graylog plugins
+  file:
+    path: /usr/share/graylog-server/plugin
+    state: absent
+
+- name: Recreate plugin directory
+  file:
+    path: /usr/share/graylog-server/plugin
+    state: directory
+    owner: graylog
+    group: graylog
+    mode: 0755
+
+
 
 - name: Reload systemd daemon
   become: true

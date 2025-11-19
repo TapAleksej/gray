@@ -1,4 +1,7 @@
 ---
+# ===============================
+# 1. COPY & INSTALL GRAYLOG RPM
+# ===============================
 
 - name: Copy Graylog RPM packages to target host
   become: true
@@ -7,18 +10,56 @@
     dest: /tmp/
   loop: "{{ graylog_local_rpms }}"
 
-
-
-- name: Install Graylog packages locally (offline, nogpgcheck)
+- name: Install Graylog packages offline
   become: true
-  command: "dnf install -y --nogpgcheck /tmp/{{ item }}"
+  yum:
+    name: "/tmp/{{ item }}"
+    state: present
+    disable_gpg_check: true
   loop: "{{ graylog_local_rpms }}"
 
+# =========================================================
+# 2. УДАЛЯЕМ ВСЕ ES6-ПЛАГИНЫ, ИДУЩИЕ В СОСТАВЕ RPM
+# =========================================================
+
+- name: Remove Elasticsearch 6 storage plugins installed by RPM
+  become: true
+  file:
+    path: "/usr/share/graylog-server/plugin"
+    state: absent
+
+- name: Recreate plugin dir
+  become: true
+  file:
+    path: "/usr/share/graylog-server/plugin"
+    state: directory
+    owner: graylog
+    group: graylog
+    mode: '0755'
 
 
 # ===============================
-# НАСТРОЙКА GRAYLOG
+# 4. COPY ONLY NEEDED PLUGINS
 # ===============================
+
+- name: Copy Graylog plugin files
+  become: true
+  copy:
+    src: "{{ item }}"
+    dest: /usr/share/graylog-server/plugin/
+    owner: graylog
+    group: graylog
+    mode: 0644
+  loop:
+    - graylog-plugin-aws-4.3.15.jar
+    - graylog-plugin-collector-4.3.15.jar
+    - graylog-plugin-threatintel-4.3.15.jar
+    - graylog-storage-elasticsearch7-4.3.15.jar
+
+
+# =========================================================
+# 3. СОЗДАЕМ ДИРЕКТОРИИ GRAYLOG
+# =========================================================
 
 - name: Ensure /etc/graylog/server directory exists
   become: true
@@ -30,9 +71,10 @@
     mode: '0750'
 
 
-# -----------------------------------------------------
-# СЕКРЕТЫ И ХЕШИ
-# -----------------------------------------------------
+# =========================================================
+# 5. SECRETS / PASSWORDS
+# =========================================================
+
 - name: Ensure pwgen is installed
   become: true
   package:
@@ -43,39 +85,41 @@
   become: true
   command: "pwgen -N 1 -s 96"
   register: graylog_secret
+  when: graylog_password_secret is not defined or graylog_password_secret == ""
   changed_when: false
 
+# Устанавливаем секрет, не перезаписывая существующее значение
 - name: Set fact for password secret
   set_fact:
-    graylog_password_secret: "{{ graylog_secret.stdout }}"
+    graylog_password_secret: "{{ graylog_secret.stdout if (graylog_secret.stdout is defined) else graylog_password_secret }}"
 
 
-# --- Генерация SHA256 пароля admin ---
+# Генерация SHA256 хеша пароля админа
 - name: Generate SHA2 hash for Graylog admin password
   become: true
   shell: "echo -n '{{ graylog_root_password }}' | sha256sum"
   register: graylog_password_hash
-  changed_when: false
 
+#сохраняем хеш!
 - name: Set Graylog password hash fact
   set_fact:
     graylog_root_password_sha2: "{{ graylog_password_hash.stdout.split()[0] }}"
 
 
 
-# =======================
-# RUN GRAYLOG AFTER ES+MONGO
-# =======================
+# =========================================================
+# 6. WAIT FOR MONGO & ELASTICSEARCH
+# =========================================================
+
 
 - name: Wait for Elasticsearch to respond
-  uri:
-    url: "http://127.0.0.1:9200"
-    method: GET
-    status_code: 200
+  shell: "curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:9200"
   register: es_status
   retries: 20
   delay: 3
-  until: es_status.status == 200
+  until: es_status.stdout == "200"
+  changed_when: false
+
 
 - name: Wait for MongoDB port
   wait_for:
@@ -85,21 +129,25 @@
     timeout: 30
 
 
-# --- Конфигурация Graylog ---
+# =========================================================
+# 7. TEMPLATE CONFIG + START SERVICE
+# =========================================================
+
 - name: Template Graylog configuration file
   become: true
   template:
     src: graylog.conf.j2
     dest: "{{ graylog_local_dir }}/server.conf"
     owner: root
-    group: root
-    mode: '0644'
-  notify: restart graylog
+    group: graylog
+    mode: '0640'
+  notify:
+    - daemon-reload
+    - restart graylog
 
-# --- Запуск Graylog ---
 - name: Ensure Graylog service is enabled and started
   become: true
   systemd:
     name: graylog-server
     enabled: true
-    state: restarted
+    state: started

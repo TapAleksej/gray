@@ -1,8 +1,16 @@
 ---
+
+- name: Set ES requirements
+  sysctl:
+    name: vm.max_map_count
+    value: 262144
+    state: present
+    reload: yes
+
 - name: Copy Elasticsearch RPM
-    copy:
-      src: "{{ elastic_rpm }}"
-      dest: /tmp/
+  copy:
+    src: "{{ elastic_rpm }}"
+    dest: /tmp/
 
 - name: Install Elasticsearch offline
   command: "dnf install -y --nogpgcheck /tmp/{{ elastic_rpm }}"

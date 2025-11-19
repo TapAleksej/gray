@@ -1,29 +1,111 @@
----
+# -------------------------------
+# Удаление старой версии Graylog
+# -------------------------------
 
-- name: Stop Graylog service if installed
+- name: Stop Graylog service if running
   become: true
   systemd:
     name: graylog-server
     state: stopped
   ignore_errors: true
 
-- name: Remove Graylog package if installed
+- name: Disable Graylog service
+  become: true
+  systemd:
+    name: graylog-server
+    enabled: false
+  ignore_errors: true
+
+- name: Remove Graylog package
   become: true
   package:
     name: graylog-server
     state: absent
   ignore_errors: true
 
-- name: Remove old Graylog config directory
+# =======================
+# УДАЛЕНИЕ ФАЙЛОВ/ДИРЕКТОРИЙ
+# =======================
+
+- name: Remove Graylog directories
   become: true
   file:
-    path: /etc/graylog/server
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/graylog
+    - /usr/share/graylog-server
+    - /var/lib/graylog-server
+    - /var/log/graylog-server
+    - /var/run/graylog-server
+  ignore_errors: true
+
+- name: Remove uploaded Graylog RPMs
+  become: true
+  file:
+    path: "/tmp/{{ item | basename }}"
+    state: absent
+  loop: "{{ graylog_local_rpms | default([]) }}"
+  ignore_errors: true
+
+# =======================
+# SYSTEMD очистка
+# =======================
+
+- name: Remove custom Graylog systemd unit if exists
+  become: true
+  file:
+    path: /etc/systemd/system/graylog-server.service
     state: absent
   ignore_errors: true
 
-- name: Remove old Graylog data directory
+- name: Remove default packaged Graylog systemd unit
   become: true
   file:
-    path: /var/lib/graylog-server
+    path: /usr/lib/systemd/system/graylog-server.service
     state: absent
+  ignore_errors: true
+
+# =======================
+# Пользователь и группа
+# =======================
+
+- name: Remove graylog user
+  become: true
+  user:
+    name: graylog
+    state: absent
+  ignore_errors: true
+
+- name: Remove graylog group
+  become: true
+  group:
+    name: graylog
+    state: absent
+  ignore_errors: true
+
+# =======================
+# REPO-файлы
+# =======================
+
+- name: Remove Graylog repo file
+  become: true
+  file:
+    path: /etc/yum.repos.d/graylog.repo
+    state: absent
+  ignore_errors: true
+
+# =======================
+# SYSTEMD reload + SELinux
+# =======================
+
+- name: Reload systemd daemon
+  become: true
+  systemd:
+    daemon_reload: true
+  ignore_errors: true
+
+- name: Restore SELinux contexts (global)
+  become: true
+  command: restorecon -RF /
   ignore_errors: true
