@@ -3,7 +3,7 @@
 
 - name: Check if local OpenSearch package exists
   stat:
-    path: "{{ playbook_dir }}/roles/graylog_offline_install/files/{{ opensearch_rpms[0] }}"
+    path: "{{ local_repo_dir }}/{{ opensearch_rpms[0] }}"
   register: opensearch_local_file
 
 - name: Install OpenSearch locally (offline)

@@ -1,0 +1,29 @@
+---
+- name: Проверка наличия RPM пакета
+  stat:
+    path: "{{ local_repo_dir }}/{{ metricbeat_rpm }}"
+  register: rpm_file
+
+- name: Ошибка если оффлайн RPM не найден
+  fail:
+    msg: "Файл {{ metricbeat_rpm }} не найден в roles/files/"
+  when: not rpm_file.stat.exists
+
+- name: Установка Metricbeat (оффлайн)
+  yum:
+    name: "{{ local_repo_dir }}/{{ metricbeat_rpm }}"
+    state: present
+
+- name: Развёртывание конфига Metricbeat
+  template:
+    src: metricbeat.yml.j2
+    dest: "{{ metricbeat_config_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Включение и запуск Metricbeat
+  service:
+    name: metricbeat
+    enabled: yes
+    state: started

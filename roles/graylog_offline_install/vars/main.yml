@@ -65,3 +65,9 @@ ssl_certificate_key: "/etc/nginx/graylog.key"
 graylog_service_name: "graylog-server"
 
 plugin_dir: "/usr/share/graylog-server/plugin"
+
+DIR_MONITORING: "/opt/monitoring"
+metricbeat_config_path: "/etc/metricbeat/metricbeat.yml"
+metricbeat_rpm: metricbeat-7.12.0-x86_64.rpm
+graylog_host: "127.0.0.1"
+graylog_port: "5044"

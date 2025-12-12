@@ -1,0 +1,17 @@
+metricbeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+metricbeat.modules:
+- module: system
+  metricsets:
+    - cpu
+    - memory
+    - network
+    - diskio
+    - filesystem
+  period: 10s
+  enabled: true
+
+output.logstash:
+  hosts: ["{{ graylog_host }}:{{ graylog_port }}"]
