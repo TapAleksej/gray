@@ -4,24 +4,31 @@
 
 - name: Delete old installation
   include_tasks: uninstall.yaml
+  when: run | bool
 
 - name: Install dependencies
   include_tasks: install_dependencies.yml
+  when: run | bool
 
 - name: Install MongoDB
   include_tasks: install_mongodb.yml
+  when: run | bool
 
 - name: Install elasticsearch
   include_tasks: install_elasticsearch.yml
+  when: run | bool
 
 - name: Install Graylog
   include_tasks: install_graylog_local.yml
+  when: run | bool
 
 - name: install metricabeat
   include_tasks: install_monitoring.yml
+  when: run | bool
 
 - name: Allow port firewall
   include_tasks: firewall.yml
+  when: run | bool
 
 - name: Install certificates
   include_tasks: sert.yml

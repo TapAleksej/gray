@@ -9,15 +9,15 @@
 
 - name: Generate private key
   community.crypto.openssl_privatekey:
-    path: "{{ ssl_key_file }}"
+    path: "{{ ssl_certificate_key }}"
     size: 4096
     type: RSA
     mode: '0600'
 
 - name: Generate CSR
   community.crypto.openssl_csr:
-    path: "{{ ssl_csr_file }}"
-    privatekey_path: "{{ ssl_key_file }}"
+    path: "{{ ssl_certificate }}"
+    privatekey_path: "{{ ssl_certificate_key }}"
     common_name: "diary.local"
     country_name: "RU"
     organization_name: "Alrexcom"
@@ -27,8 +27,8 @@
 - name: Generate self-signed certificate
   community.crypto.x509_certificate:
     path: "{{ ssl_cert_file }}"
-    privatekey_path: "{{ ssl_key_file }}"
-    csr_path: "{{ ssl_csr_file }}"
+    privatekey_path: "{{ ssl_certificate_key }}"
+    csr_path: "{{ ssl_certificate }}"
     provider: selfsigned
     selfsigned_not_before: "+0d"
     selfsigned_not_after: "+365d"

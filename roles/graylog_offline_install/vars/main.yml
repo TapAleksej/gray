@@ -1,7 +1,8 @@
 ---
 # vars file for graylog_offline_install
-# - java-11-openjdk
 
+# для отладки
+run: false
 
 packages:
   - java-11-openjdk-headless
