@@ -14,4 +14,4 @@ metricbeat.modules:
   enabled: true
 
 output.logstash:
-  hosts: ["{{ graylog_host }}:{{ graylog_port }}"]
+  hosts: ["{{ graylog_host }}:{{ beats_port }}"]

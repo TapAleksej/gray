@@ -1,35 +1,102 @@
 ---
 # ----------------------------
-# Настройка firewall (UFW)
+# Переменные
+# ----------------------------
+# true  → Metricbeat на этом же хосте → порт 5044 НЕ открываем
+# false → Metricbeat на других хостах → порт 5044 ОТКРЫТЬ
+
+# ----------------------------
+# Проверяем наличие firewalld
 # ----------------------------
 
-- name: Allow port 9200 using iptables
-  become: true
-  shell: |
-    iptables -C INPUT -p tcp --dport 9200 -j ACCEPT 2>/dev/null \
-    || iptables -I INPUT -p tcp --dport 9200 -j ACCEPT
-
-
-- name: Save iptables rules (if service exists)
-  become: true
-  shell: |
-    if systemctl list-units --type=service | grep -q iptables; then
-      service iptables save
-    fi
+- name: Check if firewalld is installed
+  command: command -v firewall-cmd
+  register: firewalld_present
   ignore_errors: true
+
+# ----------------------------
+# Открываем порт 9200
+# ----------------------------
+
+- name: Allow port 9200 via firewalld
+  become: true
+  firewalld:
+    port: 9200/tcp
+    permanent: true
+    state: enabled
+    immediate: yes
+  when: firewalld_present.rc == 0
+
+- name: Allow port 9200 via iptables
+  become: true
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 9200
+    jump: ACCEPT
+  when: firewalld_present.rc != 0
+
+# ----------------------------
+# Save iptables rules (if service exists)
+# ----------------------------
+
+- name: Save iptables rules
+  become: true
+  command: service iptables save
+  register: save_result
+  failed_when: false
+  changed_when: "'Saving' in save_result.stdout or 'OK' in save_result.stdout"
 
 # ----------------------------
 # Разрешаем порты 80 и 443
 # ----------------------------
 
-- name: Allow HTTP/HTTPS ports (80, 443)
+- name: Allow HTTP/HTTPS via firewalld
   become: true
-  shell: |
-    if command -v firewall-cmd >/dev/null 2>&1; then
-      firewall-cmd --permanent --add-service=http
-      firewall-cmd --permanent --add-service=https
-      firewall-cmd --reload
-    else
-      iptables -C INPUT -p tcp --dport 80 -j ACCEPT 2>/dev/null || iptables -I INPUT -p tcp --dport 80 -j ACCEPT
-      iptables -C INPUT -p tcp --dport 443 -j ACCEPT 2>/dev/null || iptables -I INPUT -p tcp --dport 443 -j ACCEPT
-    fi
+  firewalld:
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+    immediate: yes
+  when: firewalld_present.rc == 0
+  loop:
+    - http
+    - https
+
+- name: Allow HTTP/HTTPS via iptables
+  become: true
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: "{{ item }}"
+    jump: ACCEPT
+  when: firewalld_present.rc != 0
+  loop:
+    - 80
+    - 443
+
+# ----------------------------
+# Разрешаем порт 5044 ТОЛЬКО если Metricbeat НЕ локальный
+# ----------------------------
+
+- name: Allow Beats port via firewalld
+  become: true
+  firewalld:
+    port: "{{ beats_port }}/tcp"
+    permanent: true
+    state: enabled
+    immediate: yes
+  when:
+    - metricbeat_is_local == false
+    - firewalld_present.rc == 0
+
+- name: Allow Beats port via iptables
+  become: true
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: "{{ beats_port }}"
+    jump: ACCEPT
+  when:
+    - metricbeat_is_local == false
+    - firewalld_present.rc != 0

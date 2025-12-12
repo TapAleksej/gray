@@ -17,8 +17,11 @@
 - name: Install Graylog
   include_tasks: install_graylog_local.yml
 
-- name: Allow port firewall
-  include_tasks: firewall.yml
+- name: install metricabeat
+  include_tasks: install_monitoring.yml
+
+#- name: Allow port firewall
+#  include_tasks: firewall.yml
 
 - name: Configure nginx
   include_tasks: nginx_config.yml

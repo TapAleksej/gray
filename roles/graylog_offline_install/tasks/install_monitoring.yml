@@ -1,5 +1,6 @@
 ---
-- name: Проверка наличия RPM пакета
+# metricbeat
+- name: Проверка наличия RPM пакета metricbeat
   stat:
     path: "{{ local_repo_dir }}/{{ metricbeat_rpm }}"
   register: rpm_file
@@ -8,6 +9,12 @@
   fail:
     msg: "Файл {{ metricbeat_rpm }} не найден в roles/files/"
   when: not rpm_file.stat.exists
+
+- name: Установка GPG ключа Elastic
+  rpm_key:
+    state: present
+    key: "{{ local_repo_dir }}/GPG-KEY-elasticsearch"
+
 
 - name: Установка Metricbeat (оффлайн)
   yum:

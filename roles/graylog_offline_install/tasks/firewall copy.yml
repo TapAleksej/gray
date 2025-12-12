@@ -1,0 +1,35 @@
+---
+# ----------------------------
+# Настройка firewall (UFW)
+# ----------------------------
+
+- name: Allow port 9200 using iptables
+  become: true
+  shell: |
+    iptables -C INPUT -p tcp --dport 9200 -j ACCEPT 2>/dev/null \
+    || iptables -I INPUT -p tcp --dport 9200 -j ACCEPT
+
+
+- name: Save iptables rules (if service exists)
+  become: true
+  shell: |
+    if systemctl list-units --type=service | grep -q iptables; then
+      service iptables save
+    fi
+  ignore_errors: true
+
+# ----------------------------
+# Разрешаем порты 80 и 443
+# ----------------------------
+
+- name: Allow HTTP/HTTPS ports (80, 443)
+  become: true
+  shell: |
+    if command -v firewall-cmd >/dev/null 2>&1; then
+      firewall-cmd --permanent --add-service=http
+      firewall-cmd --permanent --add-service=https
+      firewall-cmd --reload
+    else
+      iptables -C INPUT -p tcp --dport 80 -j ACCEPT 2>/dev/null || iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+      iptables -C INPUT -p tcp --dport 443 -j ACCEPT 2>/dev/null || iptables -I INPUT -p tcp --dport 443 -j ACCEPT
+    fi
