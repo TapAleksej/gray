@@ -2,13 +2,14 @@
 # vars file for graylog_offline_install
 
 # для отладки
-run: false
+run: true
 
 packages:
   - java-11-openjdk-headless
   - pwgen
   - dnf-utils
   - curl
+  - ca-certificates
   - git
   - gnupg2
   - nginx
@@ -42,9 +43,12 @@ cluster_name: "graylog"
 
 elastic_rpm: "elasticsearch-7.10.2-x86_64.rpm"
 
+# Настройки Graylog
+graylog_host: "127.0.0.1"
+graylog_server_name: "graylog.local"
 graylog_local_dir: "/etc/graylog/server"
 
-# Настройки Graylog
+
 graylog_root_user: "admin"
 graylog_root_password: "Qwadro4x4"
 
@@ -52,7 +56,6 @@ graylog_root_password: "Qwadro4x4"
 graylog_http_bind_address: "0.0.0.0:9000"
 graylog_http_publish_uri: "http://{{ ansible_default_ipv4.address }}:9000/"
 
-graylog_host: "127.0.0.1"
 
 
 # MongoDB
@@ -62,12 +65,19 @@ nginx_log_directory: "/var/log/graylog"
 nginx_proxy_pass: "http://{{ graylog_host }}:9000/"
 nginx_conf_path: "/etc/nginx/conf.d/default.conf"
 
-ssl_cert_dir: "/etc/nginx/graylog"
+#ssl_cert_dir: "/etc/nginx/graylog"
+#ssl_certificate: "{{ ssl_cert_dir }}/graylog.crt"
+#ssl_certificate_key: "{{ ssl_cert_dir }}/graylog.key"
+ssl_cert_dir: "/etc/ssl"
+ssl_cert_file: "{{ ssl_cert_dir }}/cert.pem"
+ssl_key_file: "{{ ssl_cert_dir }}/key.pem"
+ssl_csr_file: "{{ ssl_cert_dir }}/req.csr"
+
 ssl_certificate: "{{ ssl_cert_dir }}/graylog.crt"
 ssl_certificate_key: "{{ ssl_cert_dir }}/graylog.key"
 
 
-graylog_service_name: "graylog-server"
+#graylog_service_name: "graylog-server"
 
 plugin_dir: "/usr/share/graylog-server/plugin"
 

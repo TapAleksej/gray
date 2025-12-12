@@ -39,7 +39,7 @@ mongodb_threads_allowed_to_block_multiplier = 5
 # Elasticsearch 7.10.2
 #############################
 
-elasticsearch_hosts = http://127.0.0.1:9200
+elasticsearch_hosts = http://{{ graylog_host }}:9200
 elasticsearch_version = 7
 elasticsearch_ssl_verify = false
 

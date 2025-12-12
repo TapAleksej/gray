@@ -1,19 +1,18 @@
 server {
     listen 80;
-    server_name {{ ansible_default_ipv4.address }};
-    return 301 https://$host$request_uri;
+    server_name {{ graylog_server_name }} {{ ansible_default_ipv4.address }};
+    return 301 https://{{ graylog_server_name }}$request_uri;
 }
 
 # HTTPS reverse proxy for Graylog
 server {
     listen 443 ssl;
-    server_name {{ ansible_default_ipv4.address }};
+    http2 on;
+    server_name {{ graylog_server_name }} {{ ansible_default_ipv4.address }};
 
-    ssl_certificate {{ ssl_certificate }};
+    ssl_certificate     {{ ssl_certificate }};
     ssl_certificate_key {{ ssl_certificate_key }};
-
     include /etc/ssl/ssl.conf;
-
 
     access_log {{ nginx_log_directory }}/access.log;
     error_log  {{ nginx_log_directory }}/error.log;
@@ -25,16 +24,15 @@ server {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Proto https;
         proxy_set_header X-Forwarded-Host $host;
 
         # WebSockets
-        #proxy_set_header Upgrade $http_upgrade;
-        #proxy_set_header Connection "upgrade";
+        proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "";
 
-        #proxy_read_timeout 900;
-        #proxy_send_timeout 900;
-        #proxy_request_buffering off;
+        proxy_read_timeout 900;
+        proxy_send_timeout 900;
+
     }
 }
