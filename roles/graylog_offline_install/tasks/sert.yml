@@ -7,6 +7,17 @@
     group: root
     mode: '0755'
 
+- name: Remove old SSL certificates if present
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ ssl_key_file }}"
+    - "{{ ssl_cert_file }}"
+    - "{{ ssl_csr_file }}"
+    - "{{ ssl_certificate }}"
+    - "{{ ssl_certificate_key }}"
+  ignore_errors: true
 
 - name: Copy ssl.conf
   become: true
@@ -34,6 +45,7 @@
     subject_alt_name:
     - "DNS:{{ graylog_server_name }}"
     - "IP:{{ ansible_default_ipv4.address }}"
+    - "IP:{{ external_ip }}"
 
 - name: Generate self-signed certificate
   community.crypto.x509_certificate:

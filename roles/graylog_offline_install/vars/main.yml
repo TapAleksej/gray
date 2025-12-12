@@ -47,7 +47,7 @@ elastic_rpm: "elasticsearch-7.10.2-x86_64.rpm"
 graylog_host: "127.0.0.1"
 graylog_server_name: "graylog.local"
 graylog_local_dir: "/etc/graylog/server"
-
+external_ip: "88.214.34.49"
 
 graylog_root_user: "admin"
 graylog_root_password: "Qwadro4x4"
