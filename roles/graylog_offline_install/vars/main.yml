@@ -61,9 +61,10 @@ nginx_log_directory: "/var/log/graylog"
 nginx_proxy_pass: "http://{{ graylog_host }}:9000/"
 nginx_conf_path: "/etc/nginx/conf.d/default.conf"
 
+ssl_cert_dir: "/etc/nginx/graylog"
+ssl_certificate: "{{ ssl_cert_dir }}/graylog.crt"
+ssl_certificate_key: "{{ ssl_cert_dir }}/graylog.key"
 
-ssl_certificate: "/etc/nginx/graylog.crt"
-ssl_certificate_key: "/etc/nginx/graylog.key"
 
 graylog_service_name: "graylog-server"
 

@@ -22,10 +22,6 @@
     country_name: "RU"
     organization_name: "Alrexcom"
     organizational_unit_name: "DevOps"
-    subject_alt_name:
-      - "DNS:diary.local"
-      - "DNS:localhost"
-      - "IP:127.0.0.1"
 
 
 - name: Generate self-signed certificate

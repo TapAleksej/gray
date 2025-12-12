@@ -13,6 +13,7 @@
   command: command -v firewall-cmd
   register: firewalld_present
   ignore_errors: true
+  changed_when: false
 
 # ----------------------------
 # Открываем порт 9200
