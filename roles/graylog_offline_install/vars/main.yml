@@ -2,7 +2,7 @@
 # vars file for graylog_offline_install
 
 # для отладки
-run: true
+run: false
 
 packages:
   - java-11-openjdk-headless
@@ -53,16 +53,16 @@ graylog_root_user: "admin"
 graylog_root_password: "Qwadro4x4"
 
 # HTTP bind/publish
-graylog_http_bind_address: "0.0.0.0:9000"
-graylog_http_publish_uri: "http://{{ ansible_default_ipv4.address }}:9000/"
+graylog_http_bind_address: "{{ graylog_host }}:9000"
+graylog_http_publish_uri: "https://{{ external_ip }}/"
 
 
 
 # MongoDB
 graylog_mongodb_uri: "mongodb://{{ graylog_host }}:27017/graylog"
 
-nginx_log_directory: "/var/log/graylog"
-nginx_proxy_pass: "http://{{ graylog_host }}:9000/"
+nginx_log_directory: "/var/log/nginx/graylog"
+nginx_proxy_pass: "http://{{ graylog_host }}:9000"
 nginx_conf_path: "/etc/nginx/conf.d/default.conf"
 
 #ssl_cert_dir: "/etc/nginx/graylog"

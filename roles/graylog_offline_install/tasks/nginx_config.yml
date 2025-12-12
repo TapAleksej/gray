@@ -23,14 +23,6 @@
     group: nginx
     mode: '0755'
 
-#- name: Copy ssl.conf
-#  become: true
-#  copy:
-#    src: "../scripts/ssl.conf"
-#    dest: /etc/ssl/ssl.conf
-#    mode: '0644'
-#  notify: restart nginx
-
 
 - name: Template Graylog configuration file
   become: true

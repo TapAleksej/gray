@@ -19,20 +19,13 @@
     - "{{ ssl_certificate_key }}"
   ignore_errors: true
 
-- name: Copy ssl.conf
-  become: true
-  copy:
-    src: "../scripts/ssl.conf"
-    dest: "{{ ssl_cert_dir }}/ssl.conf"
-    mode: '0644'
-
-
 - name: Generate private key
   community.crypto.openssl_privatekey:
     path: "{{ ssl_key_file }}"
     size: 4096
     type: RSA
     mode: '0600'
+
 
 - name: Generate CSR
   community.crypto.openssl_csr:
@@ -56,13 +49,24 @@
     selfsigned_not_before: "+0d"
     selfsigned_not_after: "+365d"
 
+
+- name: Copy ssl.conf
+  become: true
+  copy:
+    src: "../scripts/ssl.conf"
+    dest: "{{ ssl_cert_dir }}/ssl.conf"
+    owner: root
+    group: nginx
+    mode: '0644'
+
+
 - name: Copy cert.pem to diary.crt
   become: true
   copy:
     src: "{{ ssl_cert_file }}"
     dest: "{{ ssl_certificate }}"
     owner: root
-    group: root
+    group: nginx
     mode: '0644'
     remote_src: true
 
@@ -73,6 +77,6 @@
     src: "{{ ssl_key_file }}"
     dest: "{{ ssl_certificate_key }}"
     owner: root
-    group: root
-    mode: '0600'
+    group: nginx
+    mode: '0644'
     remote_src: true
