@@ -1,0 +1,9 @@
+---
+# vars file for roles/logging
+logrotate:
+  rotate: 3          # 3 недели
+  size: 10M
+  compress: true
+  delaycompress: true
+  missingok: true
+  notifempty: true

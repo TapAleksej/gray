@@ -1,0 +1,10 @@
+/var/log/elasticsearch/*.log {
+    weekly
+    rotate {{ logrotate.rotate }}
+    size {{ logrotate.size }}
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate
+}
