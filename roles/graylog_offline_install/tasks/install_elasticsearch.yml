@@ -12,15 +12,21 @@
     src: "{{ elastic_rpm }}"
     dest: /tmp/
 
-#- name: Install Elasticsearch offline
-#  command: "dnf install -y --nogpgcheck /tmp/{{ elastic_rpm }}"
 
-- name: Install Elasticsearch offline (no repos)
+#- name: Install Elasticsearch offline (no repos)
+#  dnf:
+#    name: "/tmp/{{ elastic_rpm }}"
+#    state: present
+#    disable_gpg_check: true
+#    disablerepo: "*"
+- name: Install Elasticsearch from offline repo
+  become: true
   dnf:
-    name: "/tmp/{{ elastic_rpm }}"
+    name: elasticsearch
     state: present
-    disable_gpg_check: true
     disablerepo: "*"
+    enablerepo: "graylog-offline"
+    disable_gpg_check: true
 
 
 - name: Enable Elasticsearch

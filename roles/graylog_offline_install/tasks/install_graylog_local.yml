@@ -1,39 +1,40 @@
 ---
 # ===============================
-# 1. COPY & INSTALL GRAYLOG RPM
+# 1.  INSTALL GRAYLOG RPM
 # ===============================
 
-- name: Copy Graylog RPM packages to target host
+- name: Install Graylog packages from offline repo
   become: true
-  copy:
-    src: "{{ item }}"
-    dest: /tmp/
-  loop: "{{ graylog_local_rpms }}"
+  dnf:
+    name:
+      - graylog-server
+      - graylog-integrations-plugins
+      - graylog-enterprise-plugins
+      - graylog-enterprise-integrations-plugins
+    state: present
+    disablerepo: "*"
+    enablerepo: "graylog-offline"
+    disable_gpg_check: true
 
-
-#- name: Install Graylog packages offline
+#- name: Copy Graylog RPM packages to target host
 #  become: true
-#  yum:
-#    name: "/tmp/{{ item }}"
-#    state: present
-#    disable_gpg_check: true
-#  loop:
-#    - "graylog-server-4.3.15-1.noarch.rpm"
-#    - "graylog-integrations-plugins-4.3.15-1.noarch.rpm"
-#    - "graylog-enterprise-plugins-4.3.15-1.x86_64.rpm"
-#    - "graylog-enterprise-integrations-plugins-4.3.15-1.noarch.rpm"
+#  copy:
+#    src: "{{ item }}"
+#    dest: /tmp/
+#  loop: "{{ graylog_local_rpms }}"
 
-- name: Install Graylog RPMs offline (no repos)
-  become: true
-  shell: |
-    dnf install -y \
-      graylog-server-4.3.15-1.noarch.rpm \
-      graylog-integrations-plugins-4.3.15-1.noarch.rpm \
-      graylog-enterprise-plugins-4.3.15-1.x86_64.rpm \
-      graylog-enterprise-integrations-plugins-4.3.15-1.noarch.rpm \
-      --disablerepo="*"
-  args:
-    chdir: "{{ role_path }}/files"
+
+#- name: Install Graylog RPMs offline (no repos)
+#  become: true
+#  shell: |
+#    dnf install -y \
+#      graylog-server-4.3.15-1.noarch.rpm \
+#      graylog-integrations-plugins-4.3.15-1.noarch.rpm \
+#      graylog-enterprise-plugins-4.3.15-1.x86_64.rpm \
+#      graylog-enterprise-integrations-plugins-4.3.15-1.noarch.rpm \
+#      --disablerepo="*"
+#  args:
+#    chdir: "{{ role_path }}/files"
 
 
 # =========================================================
@@ -93,7 +94,7 @@
 - name: Wait for Elasticsearch port
   wait_for:
     host: "{{ graylog_host }}"
-    port: "{{ ElasticsearchPort }}"
+    port: "{{ ElasticsearchPort }}" #9200
     delay: 3
     timeout: 60
 

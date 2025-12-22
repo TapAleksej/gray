@@ -1,6 +1,0 @@
-- name: Install Metricbeat from offline repo
-  dnf:
-    name: metricbeat
-    state: present
-    disablerepo: "*"
-    enablerepo: "graylog-offline"
