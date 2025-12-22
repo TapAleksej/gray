@@ -3,3 +3,4 @@
   become: true
   roles:
     - roles/graylog_offline_install
+    - roles/firewall_iptables
