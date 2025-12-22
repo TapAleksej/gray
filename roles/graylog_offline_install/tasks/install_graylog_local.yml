@@ -142,7 +142,7 @@
 
 - name: Wait for MongoDB port
   wait_for:
-    host: "127.0.0.1"
+    host: "{{ graylog_host }}"
     port: 27017
     delay: 2
     timeout: 30

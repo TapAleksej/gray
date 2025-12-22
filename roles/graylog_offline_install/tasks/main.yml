@@ -5,7 +5,6 @@
 - name: Delete old installation
   include_tasks: uninstall.yaml
   when:
-    - run | bool
     - uninstall | bool
 
 
@@ -13,44 +12,41 @@
   include_tasks: install_dependencies.yml
   when:
     - run | bool
-    - not uninstall | bool == false
+
 
 - name: Install MongoDB
   include_tasks: install_mongodb.yml
   when:
     - run | bool
-    - not uninstall | bool == false
 
 
 - name: Install elasticsearch
   include_tasks: install_elasticsearch.yml
   when:
     - run | bool
-    - not uninstall | bool == false
 
 
 - name: Install Graylog
   include_tasks: install_graylog_local.yml
   when:
     - run | bool
-    - not uninstall | bool == false
 
 - name: install metricabeat
   include_tasks: install_monitoring.yml
   when:
-    - not uninstall | bool == false
+    - run | bool
 
 - name: Allow port firewall
   include_tasks: firewall.yml
   when:
-    - not uninstall | bool == false
+    - run | bool
 
 - name: Install certificates
   include_tasks: install_sert.yml
   when:
-    - not uninstall | bool == false
+    - run | bool
 
 - name: Install nginx
   include_tasks: install_nginx.yml
   when:
-    - not uninstall | bool == false
+    - run | bool
