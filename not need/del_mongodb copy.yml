@@ -1,4 +1,7 @@
----
+# -------------------------------
+# Удаление старой версии MongoDB
+# -------------------------------
+
 - name: Stop MongoDB if running
   become: true
   systemd:
@@ -7,6 +10,12 @@
     enabled: false
   ignore_errors: true
 
+- name: Disable MongoDB service
+  become: true
+  systemd:
+    name: mongod
+    enabled: false
+  ignore_errors: true
 
 - name: Remove MongoDB packages
   become: true
@@ -19,7 +28,6 @@
       - mongodb-org-tools
     state: absent
   ignore_errors: true
-
 
 - name: Remove MongoDB data directory
   become: true
@@ -35,7 +43,6 @@
     state: absent
   ignore_errors: true
 
-
 - name: Remove MongoDB config file
   become: true
   file:
@@ -43,9 +50,41 @@
     state: absent
   ignore_errors: true
 
+- name: Remove MongoDB systemd unit
+  become: true
+  file:
+    path: /usr/lib/systemd/system/mongod.service
+    state: absent
+  ignore_errors: true
+
+- name: Remove MongoDB user
+  become: true
+  user:
+    name: mongod
+    state: absent
+  ignore_errors: true
+
+- name: Remove MongoDB group
+  become: true
+  group:
+    name: mongod
+    state: absent
+  ignore_errors: true
+
+- name: Remove MongoDB repo file
+  become: true
+  file:
+    path: /etc/yum.repos.d/mongodb-org.repo
+    state: absent
+  ignore_errors: true
 
 - name: Reload systemd daemon
   become: true
   systemd:
     daemon_reload: true
+  ignore_errors: true
+
+- name: Clean DNF cache
+  become: true
+  command: dnf clean all
   ignore_errors: true

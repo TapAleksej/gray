@@ -4,7 +4,7 @@
 # для отладки
 run: true
 # Просто удаление установки
-uninstall: false
+uninstall: true
 
 packages:
   - java-11-openjdk-headless
@@ -37,39 +37,28 @@ graylog_local_rpms:
 external_ip: "88.214.34.49"
 graylog_host: "127.0.0.1"
 graylog_server_name: "{{ external_ip }}"
-#"graylog.local"
+
 graylog_local_dir: "/etc/graylog/server"
 
 
 graylog_root_user: "admin"
 graylog_root_password: "Qwadro4x4"
 
-# HTTP bind/publish
-#graylog_http_bind_address: "{{ graylog_host }}:9000"
-#graylog_http_publish_uri: "https://{{ graylog_server_name }}/"
 
 graylog_http_bind_address: "127.0.0.1:9000"
 graylog_http_publish_uri: "http://127.0.0.1:9000"
 graylog_http_external_uri: "https://{{ external_ip }}/"
 
-ElasticsearchPort: 9200
-MongoDBPort: 27017
+
 
 # MongoDB
-#mongodb_rpms:
-#  - mongodb-org-server-4.4.29-1.el7.x86_64.rpm
-#  - mongodb-org-shell-4.4.29-1.el7.x86_64.rpm
-#  - mongodb-org-mongos-4.4.29-1.el7.x86_64.rpm
-#  - mongodb-org-tools-4.4.29-1.el7.x86_64.rpm
 graylog_mongodb_uri: "mongodb://{{ graylog_host }}:27017/graylog"
 
 nginx_log_directory: "/var/log/nginx/graylog"
 nginx_proxy_pass: "http://{{ graylog_host }}:9000"
 nginx_conf_path: "/etc/nginx/conf.d/default.conf"
 
-#ssl_cert_dir: "/etc/nginx/graylog"
-#ssl_certificate: "{{ ssl_cert_dir }}/graylog.crt"
-#ssl_certificate_key: "{{ ssl_cert_dir }}/graylog.key"
+
 ssl_cert_dir: "/etc/ssl"
 ssl_cert_file: "{{ ssl_cert_dir }}/cert.pem"
 ssl_key_file: "{{ ssl_cert_dir }}/key.pem"
@@ -79,8 +68,6 @@ ssl_certificate: "{{ ssl_cert_dir }}/graylog.crt"
 ssl_certificate_key: "{{ ssl_cert_dir }}/graylog.key"
 
 
-#graylog_service_name: "graylog-server"
-
 plugin_dir: "/usr/share/graylog-server/plugin"
 
 DIR_MONITORING: "/opt/monitoring"
@@ -88,4 +75,7 @@ metricbeat_config_path: "/etc/metricbeat/metricbeat.yml"
 metricbeat_rpm: metricbeat-7.12.0-x86_64.rpm
 
 metricbeat_is_local: true     # true = Metricbeat на том же хосте → 5044 НЕ открываем
+
 beats_port: "5044"
+ElasticsearchPort: "9200"
+MongoDBPort: "27017"

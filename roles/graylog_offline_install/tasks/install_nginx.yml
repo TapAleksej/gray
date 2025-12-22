@@ -1,4 +1,10 @@
 ---
+- name: Allow nginx to connect to backend (SELinux)
+  become: true
+  seboolean:
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes
 
 - name: Install Nginx
   become: true
