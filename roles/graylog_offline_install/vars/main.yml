@@ -52,14 +52,15 @@ graylog_http_bind_address: "127.0.0.1:9000"
 graylog_http_publish_uri: "http://127.0.0.1:9000"
 graylog_http_external_uri: "https://{{ external_ip }}/"
 
-
+ElasticsearchPort: 9200
+MongoDBPort: 27017
 
 # MongoDB
-mongodb_rpms:
-  - mongodb-org-server-4.4.29-1.el7.x86_64.rpm
-  - mongodb-org-shell-4.4.29-1.el7.x86_64.rpm
-  - mongodb-org-mongos-4.4.29-1.el7.x86_64.rpm
-  - mongodb-org-tools-4.4.29-1.el7.x86_64.rpm
+#mongodb_rpms:
+#  - mongodb-org-server-4.4.29-1.el7.x86_64.rpm
+#  - mongodb-org-shell-4.4.29-1.el7.x86_64.rpm
+#  - mongodb-org-mongos-4.4.29-1.el7.x86_64.rpm
+#  - mongodb-org-tools-4.4.29-1.el7.x86_64.rpm
 graylog_mongodb_uri: "mongodb://{{ graylog_host }}:27017/graylog"
 
 nginx_log_directory: "/var/log/nginx/graylog"

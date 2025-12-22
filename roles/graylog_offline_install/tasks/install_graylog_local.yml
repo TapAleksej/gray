@@ -10,70 +10,30 @@
     dest: /tmp/
   loop: "{{ graylog_local_rpms }}"
 
+
 #- name: Install Graylog packages offline
 #  become: true
 #  yum:
 #    name: "/tmp/{{ item }}"
 #    state: present
 #    disable_gpg_check: true
-#  loop: "{{ graylog_local_rpms }}"
-
-- name: Install Graylog packages offline
-  become: true
-  yum:
-    name: "/tmp/{{ item }}"
-    state: present
-    disable_gpg_check: true
-  loop:
-    - "graylog-server-4.3.15-1.noarch.rpm"
-    - "graylog-integrations-plugins-4.3.15-1.noarch.rpm"
-    - "graylog-enterprise-plugins-4.3.15-1.x86_64.rpm"
-    - "graylog-enterprise-integrations-plugins-4.3.15-1.noarch.rpm"
-
-
-#- name: Remove Elasticsearch 6 storage plugin
-#  become: true
-#  file:
-#    path: "{{ plugin_dir }}/graylog-storage-elasticsearch6-4.3.15.jar"
-#    state: absent
-
-# =========================================================
-# 2. УДАЛЯЕМ ВСЕ ES6-ПЛАГИНЫ, ИДУЩИЕ В СОСТАВЕ RPM
-# =========================================================
-
-#- name: Remove Elasticsearch 6 storage plugins installed by RPM
-#  become: true
-#  file:
-#    path: "/usr/share/graylog-server/plugin"
-#    state: absent
-
-#- name: Recreate plugin dir
-#  become: true
-#  file:
-#    path: "/usr/share/graylog-server/plugin"
-#    state: directory
-#    owner: graylog
-#    group: graylog
-#    mode: '0755'
-
-
-# ===============================
-# 4. COPY ONLY NEEDED PLUGINS
-# ===============================
-
-#- name: Copy Graylog plugin files
-#  become: true
-#  copy:
-#    src: "{{ item }}"
-#    dest: /usr/share/graylog-server/plugin/
-#    owner: graylog
-#    group: graylog
-#    mode: 0644
 #  loop:
-#    - graylog-plugin-aws-4.3.15.jar
-#    - graylog-plugin-collector-4.3.15.jar
-#    - graylog-plugin-threatintel-4.3.15.jar
-#    - graylog-storage-elasticsearch7-4.3.15.jar
+#    - "graylog-server-4.3.15-1.noarch.rpm"
+#    - "graylog-integrations-plugins-4.3.15-1.noarch.rpm"
+#    - "graylog-enterprise-plugins-4.3.15-1.x86_64.rpm"
+#    - "graylog-enterprise-integrations-plugins-4.3.15-1.noarch.rpm"
+
+- name: Install Graylog RPMs offline (no repos)
+  become: true
+  shell: |
+    dnf install -y \
+      graylog-server-4.3.15-1.noarch.rpm \
+      graylog-integrations-plugins-4.3.15-1.noarch.rpm \
+      graylog-enterprise-plugins-4.3.15-1.x86_64.rpm \
+      graylog-enterprise-integrations-plugins-4.3.15-1.noarch.rpm \
+      --disablerepo="*"
+  args:
+    chdir: "{{ role_path }}/files"
 
 
 # =========================================================
@@ -94,15 +54,15 @@
 # 5. SECRETS / PASSWORDS
 # =========================================================
 
-- name: Ensure pwgen is installed
-  become: true
-  package:
-    name: pwgen
-    state: present
+#- name: Ensure pwgen is installed
+#  become: true
+#  package:
+#    name: pwgen
+#    state: present
 
 - name: Generate Graylog password secret
   become: true
-  command: "pwgen -N 1 -s 96"
+  command: "openssl rand -hex 48" #"pwgen -N 1 -s 96"
   register: graylog_secret
   when: graylog_password_secret is not defined or graylog_password_secret == ""
   changed_when: false
@@ -130,20 +90,18 @@
 # 6. WAIT FOR MONGO & ELASTICSEARCH
 # =========================================================
 
-
-- name: Wait for Elasticsearch to respond
-  shell: "curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:9200"
-  register: es_status
-  retries: 20
-  delay: 3
-  until: es_status.stdout == "200"
-  changed_when: false
+- name: Wait for Elasticsearch port
+  wait_for:
+    host: "{{ graylog_host }}"
+    port: "{{ ElasticsearchPort }}"
+    delay: 3
+    timeout: 60
 
 
 - name: Wait for MongoDB port
   wait_for:
     host: "{{ graylog_host }}"
-    port: 27017
+    port: "{{ MongoDBPort }}" # 27017
     delay: 2
     timeout: 30
 

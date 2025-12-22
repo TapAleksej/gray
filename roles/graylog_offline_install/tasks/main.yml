@@ -32,7 +32,7 @@
     - run | bool
 
 - name: install metricabeat
-  include_tasks: install_monitoring.yml
+  include_tasks: install_metric.yml  #  install_monitoring.yml
   when:
     - run | bool
 

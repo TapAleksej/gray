@@ -25,13 +25,25 @@
       loop: "{{ mongodb_local_files.results }}"
       when: item.stat.exists
 
-    - name: Install MongoDB RPMs one-by-one (preserves dependency order)
-      dnf:
-        name: "/tmp/{{ item.item }}"
-        state: present
-        disable_gpg_check: true
-      loop: "{{ mongodb_local_files.results }}"
-      when: item.stat.exists
+#    - name: Install MongoDB RPMs one-by-one (preserves dependency order)
+#      dnf:
+#        name: "/tmp/{{ item.item }}"
+#        state: present
+#        disable_gpg_check: true
+#      loop: "{{ mongodb_local_files.results }}"
+#      when: item.stat.exists
+
+    - name: Install MongoDB RPMs offline
+      become: true
+      shell: |
+        dnf install -y \
+          mongodb-org-server-4.4.29-1.el7.x86_64.rpm \
+          mongodb-org-shell-4.4.29-1.el7.x86_64.rpm \
+          mongodb-org-mongos-4.4.29-1.el7.x86_64.rpm \
+          mongodb-org-tools-4.4.29-1.el7.x86_64.rpm \
+          --disablerepo="*"
+      args:
+        chdir: "{{ role_path }}/files"
 
 - name: Enable and start MongoDB
   become: true
