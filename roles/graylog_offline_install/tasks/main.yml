@@ -36,11 +36,6 @@
   when:
     - run | bool
 
-#- name: Allow port firewall
-#  include_tasks: firewall.yml
-#  when:
-#    - run | bool
-
 - name: Install certificates
   include_tasks: install_sert.yml
   when:

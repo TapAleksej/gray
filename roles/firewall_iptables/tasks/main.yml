@@ -27,11 +27,6 @@
         port: "{{ ssh_port }}"
         timeout: 10
 
-#    - name: Save iptables rules permanently
-#      become: true
-#      command: service iptables save
-#      when: ansible_facts.services['iptables'].state is defined
-#      ignore_errors: true
 
     - name: Save iptables rules permanently
       command: service iptables save
