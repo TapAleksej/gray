@@ -9,10 +9,6 @@
   ignore_errors: true
 
 
-# ========================
-# REMOVE PACKAGES
-# ========================
-
 - name: Remove Graylog package
   become: true
   package:
@@ -20,10 +16,6 @@
     state: absent
   ignore_errors: true
 
-
-# ========================
-# REMOVE CONFIGS, LOGS
-# ========================
 
 - name: Remove Graylog configuration directory
   become: true
@@ -54,22 +46,16 @@
   ignore_errors: true
 
 
-# ========================
-# REMOVE TMP FILES, RPMs
-# ========================
 
-- name: Remove any uploaded Graylog RPMs from /tmp
-  become: true
-  file:
-    path: "/tmp/{{ item | basename }}"
-    state: absent
-  loop: "{{ graylog_local_rpms | default([]) }}"
-  ignore_errors: true
+#- name: Remove any uploaded Graylog RPMs from /tmp
+#  become: true
+#  file:
+#    path: "/tmp/{{ item | basename }}"
+#    state: absent
+#  loop: "{{ graylog_local_rpms | default([]) }}"
+#  ignore_errors: true
 
 
-# ========================
-# REMOVE SYSTEMD UNIT (IF PRESENT)
-# ========================
 
 - name: Remove custom systemd unit if exists
   become: true
@@ -77,21 +63,6 @@
     path: /etc/systemd/system/graylog-server.service
     state: absent
   ignore_errors: true
-
-
-#- name: Clean old Graylog plugins
-#  file:
-#    path: /usr/share/graylog-server/plugin
-#    state: absent
-
-#- name: Recreate plugin directory
-#  file:
-#    path: /usr/share/graylog-server/plugin
-#    state: directory
-#    owner: graylog
-#    group: graylog
-#    mode: 0755
-
 
 
 - name: Reload systemd daemon

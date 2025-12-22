@@ -1,15 +1,4 @@
 ---
-# metricbeat
-#- name: Проверка наличия RPM пакета metricbeat
-#  stat:
-#    path: "{{ local_repo_dir }}/{{ metricbeat_rpm }}"
-#  register: rpm_file
-
-#- name: Ошибка если оффлайн RPM не найден
-#  fail:
-#    msg: "Файл {{ metricbeat_rpm }} не найден в roles/files/"
-#  when: not rpm_file.stat.exists
-
 - name: Установка GPG ключа Elastic
   rpm_key:
     state: present
@@ -23,10 +12,6 @@
     disablerepo: "*"
     enablerepo: "graylog-offline"
 
-#- name: Установка Metricbeat (оффлайн)
-#  yum:
-#    name: "{{ local_repo_dir }}/{{ metricbeat_rpm }}"
-#    state: present
 
 - name: Развёртывание конфига Metricbeat
   template:
