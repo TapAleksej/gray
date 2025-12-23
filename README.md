@@ -1,26 +1,44 @@
-## Запуск
-в /home/alrex/pro
+# Запуск установки
+/home/alrex/pro
+
+Удалить предыдущую установку
+```bash
+ansible-playbook run.yml -e uninstall=true
+```
+
+Удалить предыдущую установку и запустить
 ```bash
 ansible-playbook run.yml -e uninstall=true -e run=true
 ```
-переменные
+
+Запустить только firewall
+```bash
+ansible-playbook run.yml -e firewall=true
+```
 
 
-для отладки - пропускает некоторые таски
-`run: true`
+переменные в defaults/main.yml могут переопределиться при запуске playbook
+для установки - можно пропустить некоторые таски для отладки
+`run: false`
 
 Просто удаление установки
-`uninstall: true`
+`uninstall: false`
 
+Только firewall
+`firewall: true `
 
 ## Локальные пакеты для установки
 
-roles/graylog_offline_install/files/
+Первоначально файлы установки в roles/graylog_offline_install/files/
+
+
+Создан репо /opt/graylog_repo
+
+```bash
+cat /etc/yum.repos.d/graylog-offline.repo
+```
+
 
 ## Вход на сервер
 Логин: alrex
-пароль после первоначального входа: `Qwadro4x4`
-
-
-
-sudo tail -n 50 /var/log/graylog-server/server.log
+пароль входа: `Qwadro4x4`

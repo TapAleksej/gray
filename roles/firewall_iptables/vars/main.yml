@@ -1,13 +1,13 @@
 ---
 # vars file for roles/firewall_iptables
-ssh_port: 22
-http_ports:
-  - 80
-  - 443
+ssh_port: "22"
+http_port: "80"
+https_port: "443"
 
-graylog_ports:
-  - 9000
-  - 9200
-  - 27017
+graylog_port: "9000"
+elasticsearch_port: "9200"
+mongodb_port: "27017"
 
 iptables_backup: /root/iptables.backup
+
+local_host: "127.0.0.1"
