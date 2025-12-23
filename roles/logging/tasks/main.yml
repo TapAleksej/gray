@@ -7,38 +7,45 @@
       state: present
 
 
+  - name: Remove default Graylog logrotate config
+    become: true
+    file:
+      path: "{{ logrotate_path }}/graylog_config"
+      state: absent
+
+
   - name: Install Graylog logrotate config
     template:
       src: graylog.logrotate.j2
-      dest: /etc/logrotate.d/graylog
+      dest: "{{ logrotate_path }}/graylog"
       mode: '0644'
 
 
   - name: Install Nginx logrotate config
     template:
       src: nginx.logrotate.j2
-      dest: /etc/logrotate.d/nginx
+      dest: "{{ logrotate_path }}/nginx"
       mode: '0644'
 
 
   - name: Install Elasticsearch logrotate config
     template:
       src: elasticsearch.logrotate.j2
-      dest: /etc/logrotate.d/elasticsearch
+      dest: "{{ logrotate_path }}/elasticsearch"
       mode: '0644'
 
 
   - name: Install MongoDB logrotate config
     template:
       src: mongodb.logrotate.j2
-      dest: /etc/logrotate.d/mongodb
+      dest: "{{ logrotate_path }}/mongodb"
       mode: '0644'
 
 
   - name: Install Metricbeat logrotate config
     template:
       src: metricbeat.logrotate.j2
-      dest: /etc/logrotate.d/metricbeat
+      dest: "{{ logrotate_path }}/metricbeat"
       mode: '0644'
   when:
     - run | bool

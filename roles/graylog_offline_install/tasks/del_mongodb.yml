@@ -31,7 +31,7 @@
 - name: Remove MongoDB log directory
   become: true
   file:
-    path: /var/log/mongodb
+    path: "{{ mongodb_log }}"
     state: absent
   ignore_errors: true
 

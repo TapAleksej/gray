@@ -1,5 +1,4 @@
 ---
-
 - name: Set ES requirements
   sysctl:
     name: vm.max_map_count
@@ -7,10 +6,10 @@
     state: present
     reload: yes
 
-- name: Copy Elasticsearch RPM
-  copy:
-    src: "{{ elastic_rpm }}"
-    dest: /tmp/
+#- name: Copy Elasticsearch RPM
+#  copy:
+#    src: "{{ elastic_rpm }}"
+#    dest: /tmp/
 
 
 - name: Install Elasticsearch from offline repo

@@ -54,7 +54,7 @@ graylog_http_external_uri: "https://{{ external_ip }}/"
 # MongoDB
 graylog_mongodb_uri: "mongodb://{{ graylog_host }}:27017/graylog"
 
-nginx_log_directory: "/var/log/nginx/graylog"
+
 nginx_proxy_pass: "http://{{ graylog_host }}:9000"
 nginx_conf_path: "/etc/nginx/conf.d/default.conf"
 
@@ -80,4 +80,9 @@ beats_port: "5044"
 ElasticsearchPort: "9200"
 MongoDBPort: "27017"
 
-metricbeat_log: "/var/log/metricbeat"
+log_path: "/var/log"
+metricbeat_log: "{{ log_path }}/metricbeat"
+elasticsearch_log: "{{ log_path }}/elasticsearch"
+nginx_log_directory: "{{ log_path }}/nginx/graylog"
+graylog_log: "{{ log_path }}/graylog-server"
+mongodb_log: "{{ log_path }}/mongodb"

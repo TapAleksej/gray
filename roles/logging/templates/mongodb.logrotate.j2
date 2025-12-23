@@ -1,4 +1,4 @@
-/var/log/mongodb/*.log {
+{{ mongodb_path_log }}/*.log {
     weekly
     rotate {{ logrotate.rotate }}
     size {{ logrotate.size }}

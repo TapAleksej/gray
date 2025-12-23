@@ -1,4 +1,6 @@
-/var/log/elasticsearch/*.log {
+{{ elasticsearch_path_log }}/*.log
+{{ elasticsearch_path_log }}/*.json
+{{ elasticsearch_path_log }}/gc.log {
     weekly
     rotate {{ logrotate.rotate }}
     size {{ logrotate.size }}

@@ -1,9 +1,9 @@
 ---
-- name: UNInstall graylog server
+- name: UnInstall graylog server
   include_tasks: del_graylog.yml
 
 - name: Uninstall mongodb
   include_tasks: del_mongodb.yml
 
-- name: UNInstall elasticsearch
+- name: UnInstall elasticsearch
   include_tasks: del_elasticsearch.yml

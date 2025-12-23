@@ -1,9 +1,18 @@
 ---
 # vars file for roles/logging
 logrotate:
-  rotate: 3          # 3 недели
+  rotate: 21          # 21 день  -- 3 недели
   size: 10M
   compress: true
   delaycompress: true
   missingok: true
   notifempty: true
+
+logrotate_path: "/etc/logrotate.d"
+
+path_log: "/var/log"
+elasticsearch_path_log: "{{ path_log }}/elasticsearch"
+graylog_path_log: "{{ path_log }}/graylog-server"
+metricbeat_path_log: "{{ path_log }}/metricbeat"
+mongodb_path_log: "{{ path_log }}/mongodb"
+nginx_path_log: "{{ path_log }}/nginx"

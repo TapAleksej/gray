@@ -55,12 +55,6 @@
 # 5. SECRETS / PASSWORDS
 # =========================================================
 
-#- name: Ensure pwgen is installed
-#  become: true
-#  package:
-#    name: pwgen
-#    state: present
-
 - name: Generate Graylog password secret
   become: true
   command: "openssl rand -hex 48" #"pwgen -N 1 -s 96"

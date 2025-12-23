@@ -41,7 +41,7 @@
 - name: Remove Graylog logs
   become: true
   file:
-    path: /var/log/graylog-server
+    path: "{{ graylog_log }}"
     state: absent
   ignore_errors: true
 

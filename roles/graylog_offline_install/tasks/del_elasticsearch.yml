@@ -23,7 +23,7 @@
     state: absent
   loop:
     - /var/lib/elasticsearch
-    - /var/log/elasticsearch
+    - "{{ elasticsearch_log }}"
     - /etc/elasticsearch
   ignore_errors: true
 

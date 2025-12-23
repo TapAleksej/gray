@@ -1,11 +1,6 @@
 ---
 # Установка MongoDB (локально)
 
-#- name: Check if local MongoDB packages exist
-#  stat:
-#    path: "{{ local_repo_dir }}/{{ item }}"
-#  register: mongodb_local_files
-#  loop: "{{ mongodb_rpms }}"
 
 # Импортируем GPG ключ (offline)
 - name: Import MongoDB GPG key
@@ -13,29 +8,6 @@
     state: present
     key: "{{ local_repo_dir }}/server-4.4.asc"
 
-# Копирование и установка
-#- name: Install MongoDB (offline, via loop)
-#  become: true
-#  block:
-
-#    - name: Copy MongoDB RPM to /tmp
-#      copy:
-#        src: "{{ local_repo_dir }}/{{ item.item }}"
-#        dest: /tmp/
-#      loop: "{{ mongodb_local_files.results }}"
-#      when: item.stat.exists
-
-#    - name: Install MongoDB RPMs offline
-#      become: true
-#      shell: |
-#        dnf install -y \
-#          mongodb-org-server-4.4.29-1.el7.x86_64.rpm \
-#          mongodb-org-shell-4.4.29-1.el7.x86_64.rpm \
-#          mongodb-org-mongos-4.4.29-1.el7.x86_64.rpm \
-#          mongodb-org-tools-4.4.29-1.el7.x86_64.rpm \
-#          --disablerepo="*"
-#      args:
-#        chdir: "{{ role_path }}/files"
 
 - name: Install MongoDB packages from offline repo
   become: true
