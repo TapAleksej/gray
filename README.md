@@ -32,7 +32,7 @@ ansible-playbook run.yml -e firewall=true --ask-vault-pass
 
 ## Локальные пакеты для установки
 
-Первоначально файлы установки в roles/graylog_offline_install/files/
+Первоначально файлы установки в roles/rpm_files/
 
 
 Создан репо /opt/graylog_repo
@@ -42,3 +42,7 @@ cat /etc/yum.repos.d/graylog-offline.repo
 ```
 
 
+Посмотреть секрет
+```bash
+ansible-vault edit ./roles/graylog_offline_install/files/secrets.yml
+```

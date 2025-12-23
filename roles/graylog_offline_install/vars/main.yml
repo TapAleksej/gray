@@ -65,18 +65,11 @@ ssl_certificate_key: "{{ ssl_cert_dir }}/graylog.key"
 
 plugin_dir: "/usr/share/graylog-server/plugin"
 
-DIR_MONITORING: "/opt/monitoring"
-metricbeat_config_path: "/etc/metricbeat/metricbeat.yml"
-metricbeat_rpm: metricbeat-7.12.0-x86_64.rpm
-
-metricbeat_is_local: true     # true = Metricbeat на том же хосте → 5044 НЕ открываем
-
-beats_port: "5044"
 ElasticsearchPort: "9200"
 MongoDBPort: "27017"
 
 log_path: "/var/log"
-metricbeat_log: "{{ log_path }}/metricbeat"
+
 elasticsearch_log: "{{ log_path }}/elasticsearch"
 nginx_log_directory: "{{ log_path }}/nginx/graylog"
 graylog_log: "{{ log_path }}/graylog-server"

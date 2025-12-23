@@ -25,9 +25,6 @@
   - name: Install Graylog
     include_tasks: install_graylog_local.yml
 
-  - name: install metricabeat
-    include_tasks: install_monitoring.yml
-
   - name: Install certificates
     include_tasks: install_sert.yml
 

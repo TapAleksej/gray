@@ -1,0 +1,5 @@
+---
+# defaults file for roles/monitoring
+# Установка
+run: false
+monitor: false
