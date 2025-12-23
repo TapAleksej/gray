@@ -1,43 +1,44 @@
 ---
 # tasks file for roles/logging
+- block:
+  - name: Ensure logrotate is installed
+    package:
+      name: logrotate
+      state: present
 
-- name: Ensure logrotate is installed
-  package:
-    name: logrotate
-    state: present
-  tags: logging
 
-- name: Install Graylog logrotate config
-  template:
-    src: graylog.logrotate.j2
-    dest: /etc/logrotate.d/graylog
-    mode: '0644'
-  tags: logging
+  - name: Install Graylog logrotate config
+    template:
+      src: graylog.logrotate.j2
+      dest: /etc/logrotate.d/graylog
+      mode: '0644'
 
-- name: Install Nginx logrotate config
-  template:
-    src: nginx.logrotate.j2
-    dest: /etc/logrotate.d/nginx
-    mode: '0644'
-  tags: logging
 
-- name: Install Elasticsearch logrotate config
-  template:
-    src: elasticsearch.logrotate.j2
-    dest: /etc/logrotate.d/elasticsearch
-    mode: '0644'
-  tags: logging
+  - name: Install Nginx logrotate config
+    template:
+      src: nginx.logrotate.j2
+      dest: /etc/logrotate.d/nginx
+      mode: '0644'
 
-- name: Install MongoDB logrotate config
-  template:
-    src: mongodb.logrotate.j2
-    dest: /etc/logrotate.d/mongodb
-    mode: '0644'
-  tags: logging
 
-- name: Install Metricbeat logrotate config
-  template:
-    src: metricbeat.logrotate.j2
-    dest: /etc/logrotate.d/metricbeat
-    mode: '0644'
-  tags: logging
+  - name: Install Elasticsearch logrotate config
+    template:
+      src: elasticsearch.logrotate.j2
+      dest: /etc/logrotate.d/elasticsearch
+      mode: '0644'
+
+
+  - name: Install MongoDB logrotate config
+    template:
+      src: mongodb.logrotate.j2
+      dest: /etc/logrotate.d/mongodb
+      mode: '0644'
+
+
+  - name: Install Metricbeat logrotate config
+    template:
+      src: metricbeat.logrotate.j2
+      dest: /etc/logrotate.d/metricbeat
+      mode: '0644'
+  when:
+    - run | bool

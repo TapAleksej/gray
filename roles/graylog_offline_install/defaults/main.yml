@@ -1,0 +1,5 @@
+---
+# Установка graylog mongodb
+run: false
+# Полное удаление установки
+uninstall: false

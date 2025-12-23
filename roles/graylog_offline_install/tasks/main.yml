@@ -1,5 +1,10 @@
 ---
 # Основной сценарий роли graylog_offline_install
+- name: Show execution mode
+  debug:
+    msg:
+      - "UNINSTALL = {{ uninstall }}"
+      - "RUN       = {{ run }}"
 
 
 - name: Delete old installation
@@ -7,41 +12,27 @@
   when:
     - uninstall | bool
 
+- block:
+  - name: Install dependencies
+    include_tasks: install_dependencies.yml
 
-- name: Install dependencies
-  include_tasks: install_dependencies.yml
-  when:
-    - run | bool
+  - name: Install MongoDB
+    include_tasks: install_mongodb.yml
 
+  - name: Install elasticsearch
+    include_tasks: install_elasticsearch.yml
 
-- name: Install MongoDB
-  include_tasks: install_mongodb.yml
-  when:
-    - run | bool
+  - name: Install Graylog
+    include_tasks: install_graylog_local.yml
 
+  - name: install metricabeat
+    include_tasks: install_monitoring.yml
 
-- name: Install elasticsearch
-  include_tasks: install_elasticsearch.yml
-  when:
-    - run | bool
+  - name: Install certificates
+    include_tasks: install_sert.yml
 
+  - name: Install nginx
+    include_tasks: install_nginx.yml
 
-- name: Install Graylog
-  include_tasks: install_graylog_local.yml
-  when:
-    - run | bool
-
-- name: install metricabeat
-  include_tasks: install_monitoring.yml
-  when:
-    - run | bool
-
-- name: Install certificates
-  include_tasks: install_sert.yml
-  when:
-    - run | bool
-
-- name: Install nginx
-  include_tasks: install_nginx.yml
   when:
     - run | bool

@@ -1,10 +1,10 @@
 ## Запуск
 в /home/alrex/pro
 ```bash
-ansible-playbook -i hosts run.yml --diff
+ansible-playbook run.yml -e uninstall=true -e run=true
 ```
 переменные
-/vars/main.yml
+
 
 для отладки - пропускает некоторые таски
 `run: true`

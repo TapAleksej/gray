@@ -1,45 +1,50 @@
 ---
 # tasks file for roles/firewall_iptables
-- name: Backup current iptables
-  become: true
-  command: iptables-save
-  register: iptables_current
-  changed_when: false
-
-- name: Save iptables backup to file
-  become: true
-  copy:
-    content: "{{ iptables_current.stdout }}"
-    dest: "{{ iptables_backup }}"
-    mode: '0600'
-
 - block:
 
-    - name: Apply new iptables rules
-      become: true
-      shell: |
-        iptables-restore < "{{ role_path }}/files/rules.v4"
+  - name: Backup current iptables
+    become: true
+    command: iptables-save
+    register: iptables_current
+    changed_when: false
+
+  - name: Save iptables backup to file
+    become: true
+    copy:
+      content: "{{ iptables_current.stdout }}"
+      dest: "{{ iptables_backup }}"
+      mode: '0600'
+
+  - block:
+
+      - name: Apply new iptables rules
+        become: true
+        shell: |
+          iptables-restore < "{{ role_path }}/files/rules.v4"
 
 
-    - name: Wait to ensure SSH is alive
-      wait_for:
-        host: 127.0.0.1
-        port: "{{ ssh_port }}"
-        timeout: 10
+      - name: Wait to ensure SSH is alive
+        wait_for:
+          host: 127.0.0.1
+          port: "{{ ssh_port }}"
+          timeout: 10
 
 
-    - name: Save iptables rules permanently
-      command: service iptables save
-      failed_when: false
+      - name: Save iptables rules permanently
+        command: service iptables save
+        failed_when: false
 
-  rescue:
+    rescue:
 
-    - name: ROLLBACK iptables from backup
-      become: true
-      shell: |
-        iptables-restore < "{{ iptables_backup }}"
+      - name: ROLLBACK iptables from backup
+        become: true
+        shell: |
+          iptables-restore < "{{ iptables_backup }}"
 
 
-    - name: Fail with rollback message
-      fail:
-        msg: "iptables changes rolled back due to failure"
+      - name: Fail with rollback message
+        fail:
+          msg: "iptables changes rolled back due to failure"
+
+  when:
+    - run | bool
