@@ -15,17 +15,17 @@
 
 Удалить предыдущую установку
 ```bash
-ansible-playbook run.yml -e uninstall=true
+ansible-playbook run.yml -e uninstall=true --ask-vault-pass
 ```
 
 Удалить предыдущую установку и запустить
 ```bash
-ansible-playbook run.yml -e uninstall=true -e run=true
+ansible-playbook run.yml -e uninstall=true -e run=true --ask-vault-pass
 ```
 
 Запустить только firewall
 ```bash
-ansible-playbook run.yml -e firewall=true
+ansible-playbook run.yml -e firewall=true --ask-vault-pass
 ```
 
 
@@ -42,6 +42,3 @@ cat /etc/yum.repos.d/graylog-offline.repo
 ```
 
 
-## Вход на сервер
-Логин: alrex
-пароль входа: `Qwadro4x4`

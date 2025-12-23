@@ -1,4 +1,10 @@
 ---
+
+- name: Load Graylog secrets
+  include_vars:
+    file: "{{ local_repo_dir }}/secrets.yml"
+
+
 # ===============================
 # 1.  INSTALL GRAYLOG RPM
 # ===============================
@@ -15,26 +21,6 @@
     disablerepo: "*"
     enablerepo: "graylog-offline"
     disable_gpg_check: true
-
-#- name: Copy Graylog RPM packages to target host
-#  become: true
-#  copy:
-#    src: "{{ item }}"
-#    dest: /tmp/
-#  loop: "{{ graylog_local_rpms }}"
-
-
-#- name: Install Graylog RPMs offline (no repos)
-#  become: true
-#  shell: |
-#    dnf install -y \
-#      graylog-server-4.3.15-1.noarch.rpm \
-#      graylog-integrations-plugins-4.3.15-1.noarch.rpm \
-#      graylog-enterprise-plugins-4.3.15-1.x86_64.rpm \
-#      graylog-enterprise-integrations-plugins-4.3.15-1.noarch.rpm \
-#      --disablerepo="*"
-#  args:
-#    chdir: "{{ role_path }}/files"
 
 
 # =========================================================
@@ -57,6 +43,7 @@
 
 - name: Generate Graylog password secret
   become: true
+  no_log: true
   command: "openssl rand -hex 48" #"pwgen -N 1 -s 96"
   register: graylog_secret
   when: graylog_password_secret is not defined or graylog_password_secret == ""
@@ -71,6 +58,7 @@
 # Генерация SHA256 хеша пароля админа
 - name: Generate SHA2 hash for Graylog admin password
   become: true
+  no_log: true
   shell: "echo -n '{{ graylog_root_password }}' | sha256sum"
   register: graylog_password_hash
 

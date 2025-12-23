@@ -53,7 +53,7 @@
 - name: Copy ssl.conf
   become: true
   copy:
-    src: "../scripts/ssl.conf"
+    src: ssl.conf
     dest: "{{ ssl_cert_dir }}/ssl.conf"
     owner: root
     group: nginx
