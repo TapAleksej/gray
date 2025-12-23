@@ -13,12 +13,6 @@
     dest: /tmp/
 
 
-#- name: Install Elasticsearch offline (no repos)
-#  dnf:
-#    name: "/tmp/{{ elastic_rpm }}"
-#    state: present
-#    disable_gpg_check: true
-#    disablerepo: "*"
 - name: Install Elasticsearch from offline repo
   become: true
   dnf:

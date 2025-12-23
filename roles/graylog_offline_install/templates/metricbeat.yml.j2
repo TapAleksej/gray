@@ -1,7 +1,3 @@
-metricbeat.config.modules:
-  path: ${path.config}/modules.d/*.yml
-  reload.enabled: false
-
 metricbeat.modules:
 - module: system
   metricsets:
@@ -15,3 +11,14 @@ metricbeat.modules:
 
 output.logstash:
   hosts: ["{{ graylog_host }}:{{ beats_port }}"]
+
+
+logging.level: info
+logging.to_files: true
+logging.to_syslog: false
+
+logging.files:
+  path: "{{ metricbeat_log }}"
+  name: metricbeat
+  keepfiles: 7
+  permissions: 0644

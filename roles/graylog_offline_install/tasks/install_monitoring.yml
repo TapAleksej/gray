@@ -5,6 +5,15 @@
     key: "{{ local_repo_dir }}/GPG-KEY-elasticsearch"
 
 
+- name: Create Metricbeat log directory
+  file:
+    path: "{{ metricbeat_log }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+
 - name: Install Metricbeat from offline repo
   dnf:
     name: metricbeat

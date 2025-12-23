@@ -79,3 +79,5 @@ metricbeat_is_local: true     # true = Metricbeat на том же хосте �
 beats_port: "5044"
 ElasticsearchPort: "9200"
 MongoDBPort: "27017"
+
+metricbeat_log: "/var/log/metricbeat"

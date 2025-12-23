@@ -1,6 +1,18 @@
 # Запуск установки
 /home/alrex/pro
 
+Переменные
+в defaults/main.yml могут переопределиться при запуске playbook
+для установки - можно пропустить некоторые таски для отладки
+`run: false`
+
+Просто удаление установки
+`uninstall: false`
+
+Только firewall
+`firewall: true `
+
+
 Удалить предыдущую установку
 ```bash
 ansible-playbook run.yml -e uninstall=true
@@ -17,15 +29,6 @@ ansible-playbook run.yml -e firewall=true
 ```
 
 
-переменные в defaults/main.yml могут переопределиться при запуске playbook
-для установки - можно пропустить некоторые таски для отладки
-`run: false`
-
-Просто удаление установки
-`uninstall: false`
-
-Только firewall
-`firewall: true `
 
 ## Локальные пакеты для установки
 
