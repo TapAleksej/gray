@@ -6,11 +6,6 @@
     state: present
     reload: yes
 
-#- name: Copy Elasticsearch RPM
-#  copy:
-#    src: "{{ elastic_rpm }}"
-#    dest: /tmp/
-
 
 - name: Install Elasticsearch from offline repo
   become: true
@@ -27,3 +22,8 @@
     name: elasticsearch
     enabled: true
     state: started
+
+- name: Установка GPG ключа Elastic
+  rpm_key:
+    state: present
+    key: "{{ local_repo_dir }}/GPG-KEY-elasticsearch"

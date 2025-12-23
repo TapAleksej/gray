@@ -1,9 +1,9 @@
 ---
 - name: UnInstall graylog server
-  include_tasks: del_graylog.yml
+  include_tasks: uninstall/del_graylog.yml
 
 - name: Uninstall mongodb
-  include_tasks: del_mongodb.yml
+  include_tasks: uninstall/del_mongodb.yml
 
 - name: UnInstall elasticsearch
-  include_tasks: del_elasticsearch.yml
+  include_tasks: uninstall/del_elasticsearch.yml

@@ -1,8 +1,8 @@
 ---
-- name: Установка GPG ключа Elastic
-  rpm_key:
-    state: present
-    key: "{{ local_repo_dir }}/GPG-KEY-elasticsearch"
+#- name: Установка GPG ключа Elastic
+#  rpm_key:
+#    state: present
+#    key: "{{ local_repo_dir }}/GPG-KEY-elasticsearch"
 
 
 - name: Create Metricbeat log directory
