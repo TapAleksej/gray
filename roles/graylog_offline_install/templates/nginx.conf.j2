@@ -42,11 +42,11 @@ server {
         proxy_set_header X-Forwarded-Host $host;
 
         # WebSockets
-        #proxy_set_header Upgrade $http_upgrade;
-        #proxy_set_header Connection "";
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "";
 
-        #proxy_read_timeout 900;
-        #proxy_send_timeout 900;
+        proxy_read_timeout 900;
+        proxy_send_timeout 900;
 
     }
 }

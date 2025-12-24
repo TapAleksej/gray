@@ -3,3 +3,4 @@
 # Установка
 run: false
 monitor: false
+metricbeat_config_path: "/etc/metricbeat/metricbeat.yml"

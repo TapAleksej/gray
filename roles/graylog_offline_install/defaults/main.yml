@@ -3,3 +3,5 @@
 run: false
 # Полное удаление установки
 uninstall: false
+graylog_host: "127.0.0.1"
+external_ip: "88.214.34.49"

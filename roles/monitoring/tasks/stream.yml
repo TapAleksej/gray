@@ -1,4 +1,28 @@
 ---
+- name: Get index sets
+  uri:
+    url: "{{ graylog_api_url }}/system/indices/index_sets"
+    method: GET
+    user: "{{ graylog_root_user }}"
+    password: "{{ graylog_root_password }}"
+    force_basic_auth: true
+    return_content: true
+    validate_certs: false
+    headers:
+      X-Requested-By: ansible
+    status_code: 200
+  register: index_sets
+
+- name: Set default index set id
+  set_fact:
+    graylog_default_index_set_id: >-
+      {{
+        index_sets.json.index_sets
+        | selectattr('default', 'equalto', true)
+        | map(attribute='id')
+        | first
+      }}
+
 - name: Get existing streams
   uri:
     url: "{{ graylog_api_url }}/streams"
@@ -7,6 +31,7 @@
     password: "{{ graylog_root_password }}"
     force_basic_auth: true
     return_content: true
+    validate_certs: false
     headers:
       X-Requested-By: ansible
     status_code: 200
@@ -19,6 +44,7 @@
     user: "{{ graylog_root_user }}"
     password: "{{ graylog_root_password }}"
     force_basic_auth: true
+    validate_certs: false
     headers:
       X-Requested-By: ansible
     body_format: json
@@ -26,10 +52,11 @@
       title: "Metricbeat"
       description: "All Metricbeat metrics"
       matching_type: "AND"
+      index_set_id: "{{ graylog_default_index_set_id }}"
       rules:
         - field: "metricbeat_event_dataset"
-          type: 6                # REGEX
-          value: ".*"            # ⬅️ ОБЯЗАТЕЛЬНО
+          type: 6              # REGEX
+          value: ".*"
           inverted: false
     status_code: [201, 409]
   when: >
@@ -46,12 +73,13 @@
     password: "{{ graylog_root_password }}"
     force_basic_auth: true
     return_content: true
+    validate_certs: false
     headers:
       X-Requested-By: ansible
     status_code: 200
   register: streams_after
 
-- name: Set Metricbeat stream id fact
+- name: Set Metricbeat stream id
   set_fact:
     metricbeat_stream_id: >-
       {{
@@ -68,6 +96,7 @@
     user: "{{ graylog_root_user }}"
     password: "{{ graylog_root_password }}"
     force_basic_auth: true
+    validate_certs: false
     headers:
       X-Requested-By: ansible
     status_code: 204

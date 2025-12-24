@@ -1,39 +1,43 @@
 ---
-- name: Get existing Graylog inputs
+- name: Get Graylog node id
   uri:
-    url: "{{ graylog_api_url }}/system/inputs"
+    url: "{{ graylog_api_url }}/system/cluster/nodes"
     method: GET
     user: "{{ graylog_root_user }}"
     password: "{{ graylog_root_password }}"
     force_basic_auth: true
-    return_content: true
+    validate_certs: false
     headers:
       X-Requested-By: ansible
-    status_code: 200
-  register: inputs_list
+  register: graylog_nodes
+
+- name: Set graylog_node_id fact
+  set_fact:
+    graylog_node_id: "{{ graylog_nodes.json.nodes[0].node_id }}"
 
 - name: Create Beats input for Metricbeat (if not exists)
-  uri:
-    url: "{{ graylog_api_url }}/system/inputs"
-    method: POST
-    user: "{{ graylog_root_user }}"
-    password: "{{ graylog_root_password }}"
-    force_basic_auth: true
-    headers:
-      X-Requested-By: ansible
-    body_format: json
-    body:
-      title: "Metricbeat Input"
-      type: "org.graylog.plugins.beats.Beats2Input"
-      global: true
-      configuration:
-        bind_address: "0.0.0.0"
-        port: "{{ beats_port }}"
-        recv_buffer_size: 262144
-        tcp_keepalive: true
-    status_code: [201, 409]
-  when: >
-    inputs_list.json.inputs
-    | selectattr('type', 'equalto', 'org.graylog.plugins.beats.Beats2Input')
-    | list
-    | length == 0
+  shell: |
+    curl -k -u {{ graylog_root_user }}:{{ graylog_root_password }} \
+      -H "X-Requested-By: ansible" \
+      -H "Content-Type: application/json" \
+      -X POST {{ graylog_api_url }}/system/inputs \
+      -d '{
+        "title": "Metricbeat Input",
+        "type": "org.graylog.plugins.beats.Beats2Input",
+        "node": "{{ graylog_node_id }}",
+        "configuration": {
+          "bind_address": "0.0.0.0",
+          "port": {{ beats_port | int }},
+          "recv_buffer_size": 262144,
+          "tcp_keepalive": true,
+          "number_worker_threads": 2,
+          "tls_enable": false,
+          "tls_cert_file": "",
+          "tls_key_file": "",
+          "tls_key_password": "",
+          "tls_client_auth": "disabled",
+          "tls_client_auth_cert_file": ""
+        }
+      }'
+  register: curl_result
+  changed_when: "'HTTP 400' not in curl_result.stdout"

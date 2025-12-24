@@ -1,6 +1,7 @@
 graylog_host: "127.0.0.1"
+external_ip: "88.214.34.49"
 
-graylog_api_url: "http://{{ graylog_host }}:9000/api"
+graylog_api_url: "https://{{ external_ip }}/api"
 
 local_repo_dir: "{{ playbook_dir }}/roles/graylog_offline_install/files"
 

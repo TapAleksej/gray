@@ -34,8 +34,8 @@ graylog_local_rpms:
   - "graylog-enterprise-plugins-4.3.15-1.x86_64.rpm"
   - "graylog-enterprise-integrations-plugins-4.3.15-1.noarch.rpm"
 
-external_ip: "88.214.34.49"
-#graylog_host: "127.0.0.1"
+
+
 graylog_server_name: "{{ external_ip }}"
 
 graylog_local_dir: "/etc/graylog/server"

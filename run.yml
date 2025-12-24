@@ -3,6 +3,6 @@
   become: true
   roles:
     - graylog_offline_install
-    - monitoring
     - logging
     - firewall_iptables
+    - monitoring

@@ -6,13 +6,28 @@
 #  when:
 #    - run | bool or monitor | bool
 
+- name: Wait for Graylog API
+  uri:
+    url: "{{ graylog_api_url }}/system"
+    method: GET
+    user: "{{ graylog_root_user }}"
+    password: "{{ graylog_root_password }}"
+    force_basic_auth: true
+    validate_certs: false
+    headers:
+      X-Requested-By: ansible
+    status_code: 200
+  register: graylog_api_ready
+  retries: 20
+  delay: 10
+  until: graylog_api_ready.status == 200
+  tags: metrica
+
+
 - import_tasks: create_input.yml
   tags: metrica
 
 - import_tasks: stream.yml
-  tags: metrica
-
-- import_tasks: dashboards.yml
   tags: metrica
 
 

@@ -1,0 +1,51 @@
+{
+  "title": "Metricbeat - System Overview",
+  "description": "CPU / RAM / Disk / Network",
+  "widgets": [
+    {
+      "type": "aggregation",
+      "description": "CPU Usage (%)",
+      "config": {
+        "query_id": "query-1",
+        "series": [
+          {
+            "type": "avg",
+            "field": "metricbeat_system_cpu_total_norm_pct"
+          }
+        ],
+        "visualization": "line",
+        "interval": "1m"
+      }
+    },
+    {
+      "type": "aggregation",
+      "description": "RAM Usage (%)",
+      "config": {
+        "query_id": "query-1",
+        "series": [
+          {
+            "type": "avg",
+            "field": "metricbeat_system_memory_actual_used_pct"
+          }
+        ],
+        "visualization": "line",
+        "interval": "1m"
+      }
+    }
+  ],
+  "search": {
+    "queries": [
+      {
+        "id": "query-1",
+        "query": {
+          "type": "elasticsearch",
+          "query_string": "metricbeat_event_dataset:*"
+        },
+        "timerange": {
+          "type": "relative",
+          "range": 3600
+        }
+      }
+    ]
+  }
+}
