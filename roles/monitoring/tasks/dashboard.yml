@@ -1,0 +1,17 @@
+---
+
+- name: Check existing dashboards
+  shell: |
+    curl -sk -u {{ graylog_root_user }}:{{ graylog_root_password }} \
+      {{ graylog_api_url }}/views/dashboards
+  register: dashboards_raw
+  changed_when: false
+
+- name: Import Metricbeat dashboard
+  shell: |
+    curl -sk -u {{ graylog_root_user }}:{{ graylog_root_password }} \
+      -H "X-Requested-By: ansible" \
+      -H "Content-Type: application/json" \
+      -X POST {{ graylog_api_url }}/views/dashboards \
+      -d @{{ role_path }}/files/dashboard_metricbeat.json
+  when: dashboards_raw.stdout is not search("Metricbeat")

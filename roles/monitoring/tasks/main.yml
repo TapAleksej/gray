@@ -30,6 +30,8 @@
 - import_tasks: stream.yml
   tags: metrica
 
+- import_tasks: dashboard.yml
+  tags: dashboard
 
 #- name: DEBUG global vars
 #  debug:
