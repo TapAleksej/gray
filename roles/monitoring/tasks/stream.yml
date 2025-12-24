@@ -1,0 +1,73 @@
+---
+- name: Get existing streams
+  uri:
+    url: "{{ graylog_api_url }}/streams"
+    method: GET
+    user: "{{ graylog_root_user }}"
+    password: "{{ graylog_root_password }}"
+    force_basic_auth: true
+    return_content: true
+    headers:
+      X-Requested-By: ansible
+    status_code: 200
+  register: streams_list
+
+- name: Create Metricbeat stream (if not exists)
+  uri:
+    url: "{{ graylog_api_url }}/streams"
+    method: POST
+    user: "{{ graylog_root_user }}"
+    password: "{{ graylog_root_password }}"
+    force_basic_auth: true
+    headers:
+      X-Requested-By: ansible
+    body_format: json
+    body:
+      title: "Metricbeat"
+      description: "All Metricbeat metrics"
+      matching_type: "AND"
+      rules:
+        - field: "metricbeat_event_dataset"
+          type: 6                # REGEX
+          value: ".*"            # ⬅️ ОБЯЗАТЕЛЬНО
+          inverted: false
+    status_code: [201, 409]
+  when: >
+    (streams_list.json.streams | default([]))
+    | selectattr('title', 'equalto', 'Metricbeat')
+    | list
+    | length == 0
+
+- name: Get Metricbeat stream id
+  uri:
+    url: "{{ graylog_api_url }}/streams"
+    method: GET
+    user: "{{ graylog_root_user }}"
+    password: "{{ graylog_root_password }}"
+    force_basic_auth: true
+    return_content: true
+    headers:
+      X-Requested-By: ansible
+    status_code: 200
+  register: streams_after
+
+- name: Set Metricbeat stream id fact
+  set_fact:
+    metricbeat_stream_id: >-
+      {{
+        streams_after.json.streams
+        | selectattr('title', 'equalto', 'Metricbeat')
+        | map(attribute='id')
+        | first
+      }}
+
+- name: Start Metricbeat stream
+  uri:
+    url: "{{ graylog_api_url }}/streams/{{ metricbeat_stream_id }}/resume"
+    method: POST
+    user: "{{ graylog_root_user }}"
+    password: "{{ graylog_root_password }}"
+    force_basic_auth: true
+    headers:
+      X-Requested-By: ansible
+    status_code: 204

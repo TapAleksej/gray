@@ -1,0 +1,8 @@
+graylog_host: "127.0.0.1"
+
+graylog_api_url: "http://{{ graylog_host }}:9000/api"
+
+local_repo_dir: "{{ playbook_dir }}/roles/graylog_offline_install/files"
+
+metricbeat_log: "/var/log/metricbeat"
+beats_port: "5044"

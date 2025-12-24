@@ -28,6 +28,9 @@ ansible-playbook run.yml -e uninstall=true -e run=true --ask-vault-pass
 ansible-playbook run.yml -e firewall=true --ask-vault-pass
 ```
 
+```bash
+ansible-playbook run.yml --tags metrica --ask-vault-pass
+```
 
 
 ## Локальные пакеты для установки

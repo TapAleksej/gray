@@ -1,0 +1,39 @@
+---
+- name: Get existing Graylog inputs
+  uri:
+    url: "{{ graylog_api_url }}/system/inputs"
+    method: GET
+    user: "{{ graylog_root_user }}"
+    password: "{{ graylog_root_password }}"
+    force_basic_auth: true
+    return_content: true
+    headers:
+      X-Requested-By: ansible
+    status_code: 200
+  register: inputs_list
+
+- name: Create Beats input for Metricbeat (if not exists)
+  uri:
+    url: "{{ graylog_api_url }}/system/inputs"
+    method: POST
+    user: "{{ graylog_root_user }}"
+    password: "{{ graylog_root_password }}"
+    force_basic_auth: true
+    headers:
+      X-Requested-By: ansible
+    body_format: json
+    body:
+      title: "Metricbeat Input"
+      type: "org.graylog.plugins.beats.Beats2Input"
+      global: true
+      configuration:
+        bind_address: "0.0.0.0"
+        port: "{{ beats_port }}"
+        recv_buffer_size: 262144
+        tcp_keepalive: true
+    status_code: [201, 409]
+  when: >
+    inputs_list.json.inputs
+    | selectattr('type', 'equalto', 'org.graylog.plugins.beats.Beats2Input')
+    | list
+    | length == 0

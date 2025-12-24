@@ -2,5 +2,25 @@
 # tasks file for roles/monitoring
 - name: install metricabeat
   include_tasks: install_metricbeat.yml
-  when:
-    - run | bool or monitor | bool
+  tags: metrica
+#  when:
+#    - run | bool or monitor | bool
+
+- import_tasks: create_input.yml
+  tags: metrica
+
+- import_tasks: stream.yml
+  tags: metrica
+
+- import_tasks: dashboards.yml
+  tags: metrica
+
+
+#- name: DEBUG global vars
+#  debug:
+#    msg:
+#      - "graylog_api_url={{ graylog_api_url }}"
+#      - "graylog_root_user={{ graylog_root_user }}"
+#      - "beats_port={{ beats_port }}"
+#  tags: metrica
+

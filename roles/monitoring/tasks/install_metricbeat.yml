@@ -1,4 +1,8 @@
 ---
+#- name: Load Graylog secrets
+#  include_vars:
+#    file: "{{ local_repo_dir }}/secrets.yml"
+
 - name: Create Metricbeat log directory
   file:
     path: "{{ metricbeat_log }}"
