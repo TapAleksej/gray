@@ -1,4 +1,4 @@
-# roles/monitoring/tasks/search.yml
+---
 - name: Create Metricbeat search
   uri:
     url: "{{ graylog_api_url }}/views/search"
@@ -13,7 +13,7 @@
     body_format: json
     body:
       queries:
-        - id: metricbeat-query
+        - id: metricbeat-query            # ← ВАЖНО
           query:
             type: elasticsearch
             query_string: "*"
@@ -24,14 +24,10 @@
             type: stream
             id: "{{ metricbeat_stream_id }}"
           search_types:
-            - id: cpu-search-type
+            - id: metricbeat-search-type  # ← ВАЖНО
               type: messages
-              name: Metricbeat Messages
-              limit: 1
-            - id: memory-search-type
-              type: messages
-              name: Metricbeat Messages
-              limit: 1
+              name: Metricbeat Search Type
+              query_id: metricbeat-query
     status_code: 201
   register: metricbeat_search
 

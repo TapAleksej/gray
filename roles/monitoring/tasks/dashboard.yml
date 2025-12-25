@@ -23,10 +23,12 @@
 
 - name: Render dashboard JSON from template
   template:
-    src: dashboard_metricbeat.json.j2
+    src: dashboard_metricbeat_import_json.j2
     dest: /tmp/dashboard_metricbeat.json
     mode: '0644'
   when: not dashboard_exists
+
+
 
 - name: Import Metricbeat dashboard via curl
   shell: |

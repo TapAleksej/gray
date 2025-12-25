@@ -1,0 +1,79 @@
+{
+  "type": "DASHBOARD",
+  "title": "Server Health",
+  "summary": "",
+  "description": "Создано в ансибл",
+  "search_id": "{{ metricbeat_search_id }}",
+  "properties": [],
+  "requires": {},
+  "state": {
+    "metricbeat-query": {
+      "widgets": [
+        {
+          "id": "cpu-usage",
+          "type": "aggregation",
+          "filter": null,
+          "timerange": {
+            "type": "relative",
+            "from": 300
+          },
+          "query": {
+            "type": "elasticsearch",
+            "query_string": "metricbeat_system_cpu_total_pct:>0"
+          },
+          "streams": [
+            "{{ metricbeat_stream_id }}"
+          ],
+          "config": {
+            "row_pivots": [
+              {
+                "field": "timestamp",
+                "type": "time",
+                "config": {
+                  "interval": {
+                    "type": "timeunit",
+                    "value": 1,
+                    "unit": "minutes"
+                  }
+                }
+              }
+            ],
+            "column_pivots": [],
+            "series": [
+              {
+                "function": "avg(metricbeat_system_cpu_total_pct)",
+                "config": {
+                  "name": "CPU Usage %"
+                }
+              }
+            ],
+            "sort": [],
+            "visualization": "line",
+            "visualization_config": {
+              "interpolation": "linear"
+            },
+            "rollup": true,
+            "event_annotation": false
+          }
+        }
+      ],
+      "widget_mapping": {
+        "cpu-usage": ["metricbeat-search-type"]
+      },
+      "positions": {
+        "cpu-usage": {
+          "col": 9,
+          "row": 3,
+          "width": 4,
+          "height": 4
+        }
+      },
+      "formatting": {
+        "highlighting": []
+      },
+      "display_mode_settings": {
+        "positions": {}
+      }
+    }
+  }
+}

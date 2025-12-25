@@ -1,6 +1,7 @@
 {
   "type": "DASHBOARD",
-  "title": "Server Health2",
+  "title": "Server Health",
+  "search_id": "694d46c8b6768356dde5c75e",
   "summary": "",
   "description": "",
   "properties": [],
@@ -26,10 +27,10 @@
           },
           "query": {
             "type": "elasticsearch",
-            "query_string": "metricbeat_system_memory_used_pct:>0"
+            "query_string": "metricbeat_system_memory_used_pct:[0 TO *]"
           },
           "streams": [
-            "{{ metricbeat_stream_id }}"
+            "694d259fb6768356dde58223"
           ],
           "config": {
             "row_pivots": [
@@ -74,10 +75,10 @@
           },
           "query": {
             "type": "elasticsearch",
-            "query_string": "metricbeat_system_load_1:>0"
+            "query_string": "metricbeat_system_load_1:[0 TO *]"
           },
           "streams": [
-            "{{ metricbeat_stream_id }}"
+            "694d259fb6768356dde58223"
           ],
           "config": {
             "row_pivots": [
@@ -132,7 +133,7 @@
             "query_string": ""
           },
           "streams": [
-            "{{ metricbeat_stream_id }}"
+            "694d259fb6768356dde58223"
           ],
           "config": {
             "row_pivots": [
@@ -173,10 +174,10 @@
           },
           "query": {
             "type": "elasticsearch",
-            "query_string": "metricbeat_system_load_5:>0"
+            "query_string": "metricbeat_system_load_5:[0 TO *]"
           },
           "streams": [
-            "{{ metricbeat_stream_id }}"
+            "694d259fb6768356dde58223"
           ],
           "config": {
             "row_pivots": [
@@ -221,10 +222,10 @@
           },
           "query": {
             "type": "elasticsearch",
-            "query_string": "metricbeat_system_load_15:>0"
+            "query_string": "metricbeat_system_load_15:[0 TO *]"
           },
           "streams": [
-            "{{ metricbeat_stream_id }}"
+            "694d259fb6768356dde58223"
           ],
           "config": {
             "row_pivots": [
@@ -276,10 +277,10 @@
           },
           "query": {
             "type": "elasticsearch",
-            "query_string": "metricbeat_system_cpu_total_pct:>0"
+            "query_string": "metricbeat_system_cpu_total_pct:[0 TO *]"
           },
           "streams": [
-            "{{ metricbeat_stream_id }}"
+            "694d259fb6768356dde58223"
           ],
           "config": {
             "row_pivots": [
@@ -327,7 +328,7 @@
             "query_string": ""
           },
           "streams": [
-            "{{ metricbeat_stream_id }}"
+            "694d259fb6768356dde58223"
           ],
           "config": {
             "row_pivots": [
@@ -442,7 +443,5 @@
         "positions": {}
       }
     }
-  },
-  "owner": "admin",
-  "created_at": "2025-12-25T06:57:40.462Z"
+  }
 }

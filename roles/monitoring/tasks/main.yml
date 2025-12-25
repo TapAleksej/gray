@@ -2,7 +2,7 @@
 # tasks file for roles/monitoring
 - name: install metricabeat
   include_tasks: install_metricbeat.yml
-  tags: metrica
+  tags: metrica_full
 #  when:
 #    - run | bool or monitor | bool
 
