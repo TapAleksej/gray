@@ -1,0 +1,190 @@
+{
+    "type": "DASHBOARD",
+    "title": "Sources33",
+    "summary": "This is a list of all sources that sent in messages to Graylog.",
+    "description": "This is a list of all sources that sent in messages to Graylog. You can narrow the timerange by zooming in on the message histogram, or you can increase the time range by specifying a broader one in the controls at the top. You can also specify filters to limit the results you are seeing. You can also add additional widgets to this dashboard, or adapt the appearance of existing widgets to suit your needs.",
+    "search_id": "694d258cb6768356dde581c9",
+    "properties": [],
+    "requires": {},
+    "state": {
+        "a1647eb6-a064-4fe6-b459-1e4267d3f659": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+                "tab": {
+                    "title": "Sources Overview"
+                },
+                "widget": {
+                    "6c127c5d-be75-4157-b43f-ac0194ac0586": "Selected sources",
+                    "92d63811-e4dd-47db-bd3b-db03c8a9bd53": "Messages per Source",
+                    "00637e63-d728-4b3e-932b-7c8696b4855d": "Messages over time"
+                }
+            },
+            "widgets": [
+                {
+                    "id": "6c127c5d-be75-4157-b43f-ac0194ac0586",
+                    "type": "aggregation",
+                    "filter": null,
+                    "timerange": {
+                        "type": "relative",
+                        "range": 300
+                    },
+                    "query": null,
+                    "streams": [],
+                    "config": {
+                        "row_pivots": [
+                            {
+                                "field": "source",
+                                "type": "values",
+                                "config": {
+                                    "limit": 15
+                                }
+                            }
+                        ],
+                        "column_pivots": [],
+                        "series": [
+                            {
+                                "config": {
+                                    "name": "Message count"
+                                },
+                                "function": "count()"
+                            }
+                        ],
+                        "sort": [
+                            {
+                                "type": "series",
+                                "field": "count()",
+                                "direction": "Descending"
+                            }
+                        ],
+                        "visualization": "table",
+                        "visualization_config": null,
+                        "formatting_settings": null,
+                        "rollup": true,
+                        "event_annotation": false
+                    }
+                },
+                {
+                    "id": "00637e63-d728-4b3e-932b-7c8696b4855d",
+                    "type": "aggregation",
+                    "filter": null,
+                    "timerange": {
+                        "type": "relative",
+                        "range": 300
+                    },
+                    "query": null,
+                    "streams": [],
+                    "config": {
+                        "row_pivots": [
+                            {
+                                "field": "timestamp",
+                                "type": "time",
+                                "config": {
+                                    "interval": {
+                                        "type": "auto",
+                                        "scaling": 1.0
+                                    }
+                                }
+                            }
+                        ],
+                        "column_pivots": [],
+                        "series": [
+                            {
+                                "config": {
+                                    "name": "Message count"
+                                },
+                                "function": "count()"
+                            }
+                        ],
+                        "sort": [],
+                        "visualization": "line",
+                        "visualization_config": null,
+                        "formatting_settings": null,
+                        "rollup": true,
+                        "event_annotation": false
+                    }
+                },
+                {
+                    "id": "92d63811-e4dd-47db-bd3b-db03c8a9bd53",
+                    "type": "aggregation",
+                    "filter": null,
+                    "timerange": {
+                        "type": "relative",
+                        "range": 300
+                    },
+                    "query": null,
+                    "streams": [],
+                    "config": {
+                        "row_pivots": [
+                            {
+                                "field": "source",
+                                "type": "values",
+                                "config": {
+                                    "limit": 10
+                                }
+                            }
+                        ],
+                        "column_pivots": [],
+                        "series": [
+                            {
+                                "config": {
+                                    "name": "Message count"
+                                },
+                                "function": "count()"
+                            }
+                        ],
+                        "sort": [
+                            {
+                                "type": "series",
+                                "field": "count()",
+                                "direction": "Descending"
+                            }
+                        ],
+                        "visualization": "pie",
+                        "visualization_config": null,
+                        "formatting_settings": null,
+                        "rollup": true,
+                        "event_annotation": false
+                    }
+                }
+            ],
+            "widget_mapping": {
+                "6c127c5d-be75-4157-b43f-ac0194ac0586": [
+                    "011b2894-49e5-44d8-aab6-8c4d4457a886"
+                ],
+                "92d63811-e4dd-47db-bd3b-db03c8a9bd53": [
+                    "a964f1c5-e108-4b5e-a907-ffe0b0f0683c"
+                ],
+                "00637e63-d728-4b3e-932b-7c8696b4855d": [
+                    "481de18f-938e-40d5-8ab2-6eaf6a28f091"
+                ]
+            },
+            "positions": {
+                "6c127c5d-be75-4157-b43f-ac0194ac0586": {
+                    "col": 1,
+                    "row": 5,
+                    "height": 4,
+                    "width": 6
+                },
+                "92d63811-e4dd-47db-bd3b-db03c8a9bd53": {
+                    "col": 7,
+                    "row": 5,
+                    "height": 4,
+                    "width": 6
+                },
+                "00637e63-d728-4b3e-932b-7c8696b4855d": {
+                    "col": 1,
+                    "row": 1,
+                    "height": 4,
+                    "width": "Infinity"
+                }
+            },
+            "formatting": {
+                "highlighting": []
+            },
+            "display_mode_settings": {
+                "positions": {}
+            }
+        }
+    }
+}

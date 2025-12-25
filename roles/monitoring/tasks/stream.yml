@@ -23,6 +23,7 @@
         | first
       }}
 
+
 - name: Get existing streams
   uri:
     url: "{{ graylog_api_url }}/streams"
@@ -36,6 +37,7 @@
       X-Requested-By: ansible
     status_code: 200
   register: streams_list
+
 
 - name: Create Metricbeat stream (if not exists)
   uri:
@@ -53,17 +55,14 @@
       description: "All Metricbeat metrics"
       matching_type: "AND"
       index_set_id: "{{ graylog_default_index_set_id }}"
-      rules:
-        - field: "metricbeat_event_dataset"
-          type: 6              # REGEX
-          value: ".*"
-          inverted: false
+      rules: []
     status_code: [201, 409]
   when: >
     (streams_list.json.streams | default([]))
     | selectattr('title', 'equalto', 'Metricbeat')
     | list
     | length == 0
+
 
 - name: Get Metricbeat stream id
   uri:
@@ -79,6 +78,7 @@
     status_code: 200
   register: streams_after
 
+
 - name: Set Metricbeat stream id
   set_fact:
     metricbeat_stream_id: >-
@@ -88,6 +88,117 @@
         | map(attribute='id')
         | first
       }}
+
+# === INPUT ID
+- name: Get inputs
+  uri:
+    url: "{{ graylog_api_url }}/system/inputs"
+    method: GET
+    user: "{{ graylog_root_user }}"
+    password: "{{ graylog_root_password }}"
+    force_basic_auth: true
+    return_content: true
+    validate_certs: false
+    headers:
+      X-Requested-By: ansible
+  register: inputs_list
+
+- name: Set Metricbeat input id
+  set_fact:
+    metricbeat_input_id: >-
+      {{
+        inputs_list.json.inputs
+        | selectattr('title', 'equalto', 'Metricbeat Input')
+        | map(attribute='id')
+        | first
+      }}
+
+# === STREAM RULES
+
+- name: Get existing stream rules
+  uri:
+    url: "{{ graylog_api_url }}/streams/{{ metricbeat_stream_id }}/rules"
+    method: GET
+    user: "{{ graylog_root_user }}"
+    password: "{{ graylog_root_password }}"
+    force_basic_auth: true
+    return_content: true
+    validate_certs: false
+    headers:
+      X-Requested-By: ansible
+  register: stream_rules
+
+# Rule 1: source_input == Metricbeat Input
+- name: Bind Metricbeat input to Metricbeat stream
+  uri:
+    url: "{{ graylog_api_url }}/streams/{{ metricbeat_stream_id }}/rules"
+    method: POST
+    user: "{{ graylog_root_user }}"
+    password: "{{ graylog_root_password }}"
+    force_basic_auth: true
+    validate_certs: false
+    headers:
+      X-Requested-By: ansible
+    body_format: json
+    body:
+      field: "source_input"
+      type: 8          # math input
+      value: "{{ metricbeat_input_id }}"
+      inverted: false
+    status_code: 201
+  when: >
+    (stream_rules.json.stream_rules | default([]))
+    | selectattr('field', 'equalto', 'source_input')
+    | list
+    | length == 0
+
+
+# Rule 2: metricbeat_event_dataset exists (доп. защита)
+#- name: Add metricbeat dataset rule
+#  uri:
+#    url: "{{ graylog_api_url }}/streams/{{ metricbeat_stream_id }}/rules"
+#    method: POST
+#    user: "{{ graylog_root_user }}"
+#    password: "{{ graylog_root_password }}"
+#    force_basic_auth: true
+#    validate_certs: false
+#    headers:
+#      X-Requested-By: ansible
+#    body_format: json
+#    body:
+#      field: "metricbeat_event_dataset"
+#      type: 6            # REGEX
+#      value: ".*"
+#      inverted: false
+#    status_code: 201
+#  when: >
+#    (stream_rules.json.stream_rules | default([]))
+#    | selectattr('field', 'equalto', 'metricbeat_event_dataset')
+#    | list
+#    | length == 0
+
+#  uri:
+#    url: "{{ graylog_api_url }}/streams/{{ metricbeat_stream_id }}/rules"
+#    method: POST
+#    user: "{{ graylog_root_user }}"
+#    password: "{{ graylog_root_password }}"
+#    force_basic_auth: true
+#    validate_certs: false
+#    headers:
+#      X-Requested-By: ansible
+#    body_format: json
+#    body:
+#      field: "metricbeat_event_dataset"
+#      type: 6          # REGEX
+#      value: ".*"
+#      inverted: false
+#  when: >
+#    (stream_rules.json.stream_rules | default([]))
+#    | selectattr('field', 'equalto', 'metricbeat_event_dataset')
+#    | list
+#    | length == 0
+
+
 
 - name: Start Metricbeat stream
   uri:

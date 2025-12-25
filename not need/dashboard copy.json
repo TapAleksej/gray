@@ -31,7 +31,7 @@
                         "query_string": "metricbeat_system_memory_used_pct:>0"
                     },
                     "streams": [
-                        "694be03bfaa88401f71630be"
+                        "694d259fb6768356dde58223"
                     ],
                     "config": {
                         "row_pivots": [
@@ -79,7 +79,7 @@
                         "query_string": "metricbeat_system_load_1:>0"
                     },
                     "streams": [
-                        "694be03bfaa88401f71630be"
+                        "694d259fb6768356dde58223"
                     ],
                     "config": {
                         "row_pivots": [
@@ -134,7 +134,7 @@
                         "query_string": ""
                     },
                     "streams": [
-                        "694be03bfaa88401f71630be"
+                        "694d259fb6768356dde58223"
                     ],
                     "config": {
                         "row_pivots": [
@@ -178,7 +178,7 @@
                         "query_string": "metricbeat_system_load_5:>0"
                     },
                     "streams": [
-                        "694be03bfaa88401f71630be"
+                        "694d259fb6768356dde58223"
                     ],
                     "config": {
                         "row_pivots": [
@@ -226,7 +226,7 @@
                         "query_string": "metricbeat_system_load_15:>0"
                     },
                     "streams": [
-                        "694be03bfaa88401f71630be"
+                        "694d259fb6768356dde58223"
                     ],
                     "config": {
                         "row_pivots": [
@@ -281,7 +281,7 @@
                         "query_string": "metricbeat_system_cpu_total_pct:>0"
                     },
                     "streams": [
-                        "694be03bfaa88401f71630be"
+                        "694d259fb6768356dde58223"
                     ],
                     "config": {
                         "row_pivots": [
@@ -329,7 +329,7 @@
                         "query_string": ""
                     },
                     "streams": [
-                        "694be03bfaa88401f71630be"
+                        "694d259fb6768356dde58223"
                     ],
                     "config": {
                         "row_pivots": [

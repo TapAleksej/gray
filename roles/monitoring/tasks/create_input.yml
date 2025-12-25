@@ -1,4 +1,26 @@
 ---
+- name: Get existing inputs
+  uri:
+    url: "{{ graylog_api_url }}/system/inputs"
+    method: GET
+    user: "{{ graylog_root_user }}"
+    password: "{{ graylog_root_password }}"
+    force_basic_auth: true
+    validate_certs: false
+    headers:
+      X-Requested-By: ansible
+  register: graylog_inputs
+
+- name: Check if Metricbeat input exists
+  set_fact:
+    metricbeat_input_exists: >-
+      {{
+        graylog_inputs.json.inputs
+        | selectattr('title', 'equalto', 'Metricbeat Input')
+        | list
+        | length > 0
+      }}
+
 - name: Get Graylog node id
   uri:
     url: "{{ graylog_api_url }}/system/cluster/nodes"
@@ -10,10 +32,12 @@
     headers:
       X-Requested-By: ansible
   register: graylog_nodes
+  when: not metricbeat_input_exists
 
 - name: Set graylog_node_id fact
   set_fact:
     graylog_node_id: "{{ graylog_nodes.json.nodes[0].node_id }}"
+  when: not metricbeat_input_exists
 
 - name: Create Beats input for Metricbeat (if not exists)
   shell: |
@@ -41,3 +65,4 @@
       }'
   register: curl_result
   changed_when: "'HTTP 400' not in curl_result.stdout"
+  when: not metricbeat_input_exists

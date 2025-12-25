@@ -1,0 +1,448 @@
+{
+  "type": "DASHBOARD",
+  "title": "Server Health2",
+  "summary": "",
+  "description": "",
+  "properties": [],
+  "requires": {},
+  "state": {
+    "82a2ae27-746d-4d3e-904a-98489a9876a4": {
+      "selected_fields": null,
+      "static_message_list_id": null,
+      "titles": {
+        "widget": {
+          "e68fb373-f7b3-4a27-8f48-1d5895262d53": "Aggregating LA (1 min), LA (5 min), LA (15 min) by timestamp (copy)",
+          "88166c59-f26f-46d7-bced-11aed2f320c8": "Aggregating LA (1 min), LA (5 min), LA (15 min) by timestamp (copy)"
+        }
+      },
+      "widgets": [
+        {
+          "id": "aa72d504-6419-4866-ad1f-68911b5298a8",
+          "type": "aggregation",
+          "filter": null,
+          "timerange": {
+            "type": "relative",
+            "from": 300
+          },
+          "query": {
+            "type": "elasticsearch",
+            "query_string": "metricbeat_system_memory_used_pct:>0"
+          },
+          "streams": [
+            "{{ metricbeat_stream_id }}"
+          ],
+          "config": {
+            "row_pivots": [
+              {
+                "field": "timestamp",
+                "type": "time",
+                "config": {
+                  "interval": {
+                    "type": "timeunit",
+                    "value": 1,
+                    "unit": "minutes"
+                  }
+                }
+              }
+            ],
+            "column_pivots": [],
+            "series": [
+              {
+                "config": {
+                  "name": "Memory Usage (%)"
+                },
+                "function": "avg(metricbeat_system_memory_used_pct)"
+              }
+            ],
+            "sort": [],
+            "visualization": "line",
+            "visualization_config": {
+              "interpolation": "linear"
+            },
+            "formatting_settings": null,
+            "rollup": true,
+            "event_annotation": false
+          }
+        },
+        {
+          "id": "ef6d659a-f5f7-48df-b2bc-0b8bedbef27d",
+          "type": "aggregation",
+          "filter": null,
+          "timerange": {
+            "type": "relative",
+            "from": 300
+          },
+          "query": {
+            "type": "elasticsearch",
+            "query_string": "metricbeat_system_load_1:>0"
+          },
+          "streams": [
+            "{{ metricbeat_stream_id }}"
+          ],
+          "config": {
+            "row_pivots": [
+              {
+                "field": "timestamp",
+                "type": "time",
+                "config": {
+                  "interval": {
+                    "type": "timeunit",
+                    "value": 1,
+                    "unit": "minutes"
+                  }
+                }
+              }
+            ],
+            "column_pivots": [],
+            "series": [
+              {
+                "config": {
+                  "name": "LA (1 min)"
+                },
+                "function": "avg(metricbeat_system_load_1)"
+              }
+            ],
+            "sort": [],
+            "visualization": "line",
+            "visualization_config": {
+              "interpolation": "linear"
+            },
+            "formatting_settings": {
+              "chart_colors": [
+                {
+                  "field_name": "LA (1 min)",
+                  "chart_color": "#9869b9"
+                }
+              ]
+            },
+            "rollup": true,
+            "event_annotation": false
+          }
+        },
+        {
+          "id": "4ddc42c6-5812-4475-87af-de6b8093e90f",
+          "type": "aggregation",
+          "filter": null,
+          "timerange": {
+            "type": "relative",
+            "from": 300
+          },
+          "query": {
+            "type": "elasticsearch",
+            "query_string": ""
+          },
+          "streams": [
+            "{{ metricbeat_stream_id }}"
+          ],
+          "config": {
+            "row_pivots": [
+              {
+                "field": "metricbeat_system_filesystem_mount_point",
+                "type": "values",
+                "config": {
+                  "limit": 15
+                }
+              }
+            ],
+            "column_pivots": [],
+            "series": [
+              {
+                "config": {
+                  "name": "Disk Usage"
+                },
+                "function": "avg(metricbeat_system_filesystem_used_pct)"
+              }
+            ],
+            "sort": [],
+            "visualization": "bar",
+            "visualization_config": {
+              "barmode": "group"
+            },
+            "formatting_settings": null,
+            "rollup": true,
+            "event_annotation": false
+          }
+        },
+        {
+          "id": "e68fb373-f7b3-4a27-8f48-1d5895262d53",
+          "type": "aggregation",
+          "filter": null,
+          "timerange": {
+            "type": "relative",
+            "from": 300
+          },
+          "query": {
+            "type": "elasticsearch",
+            "query_string": "metricbeat_system_load_5:>0"
+          },
+          "streams": [
+            "{{ metricbeat_stream_id }}"
+          ],
+          "config": {
+            "row_pivots": [
+              {
+                "field": "timestamp",
+                "type": "time",
+                "config": {
+                  "interval": {
+                    "type": "timeunit",
+                    "value": 1,
+                    "unit": "minutes"
+                  }
+                }
+              }
+            ],
+            "column_pivots": [],
+            "series": [
+              {
+                "config": {
+                  "name": "LA (5 min)"
+                },
+                "function": "avg(metricbeat_system_load_5)"
+              }
+            ],
+            "sort": [],
+            "visualization": "line",
+            "visualization_config": {
+              "interpolation": "linear"
+            },
+            "formatting_settings": null,
+            "rollup": true,
+            "event_annotation": false
+          }
+        },
+        {
+          "id": "88166c59-f26f-46d7-bced-11aed2f320c8",
+          "type": "aggregation",
+          "filter": null,
+          "timerange": {
+            "type": "relative",
+            "from": 300
+          },
+          "query": {
+            "type": "elasticsearch",
+            "query_string": "metricbeat_system_load_15:>0"
+          },
+          "streams": [
+            "{{ metricbeat_stream_id }}"
+          ],
+          "config": {
+            "row_pivots": [
+              {
+                "field": "timestamp",
+                "type": "time",
+                "config": {
+                  "interval": {
+                    "type": "timeunit",
+                    "value": 1,
+                    "unit": "minutes"
+                  }
+                }
+              }
+            ],
+            "column_pivots": [],
+            "series": [
+              {
+                "config": {
+                  "name": "LA (15 min)"
+                },
+                "function": "avg(metricbeat_system_load_15)"
+              }
+            ],
+            "sort": [],
+            "visualization": "line",
+            "visualization_config": {
+              "interpolation": "linear"
+            },
+            "formatting_settings": {
+              "chart_colors": [
+                {
+                  "field_name": "LA (15 min)",
+                  "chart_color": "#ff6f00"
+                }
+              ]
+            },
+            "rollup": true,
+            "event_annotation": false
+          }
+        },
+        {
+          "id": "3cd164f1-3bcf-4147-a773-f37d32397aee",
+          "type": "aggregation",
+          "filter": null,
+          "timerange": {
+            "type": "relative",
+            "range": 0
+          },
+          "query": {
+            "type": "elasticsearch",
+            "query_string": "metricbeat_system_cpu_total_pct:>0"
+          },
+          "streams": [
+            "{{ metricbeat_stream_id }}"
+          ],
+          "config": {
+            "row_pivots": [
+              {
+                "field": "timestamp",
+                "type": "time",
+                "config": {
+                  "interval": {
+                    "type": "timeunit",
+                    "value": 1,
+                    "unit": "minutes"
+                  }
+                }
+              }
+            ],
+            "column_pivots": [],
+            "series": [
+              {
+                "config": {
+                  "name": "CPU Usage %"
+                },
+                "function": "avg(metricbeat_system_cpu_total_pct)"
+              }
+            ],
+            "sort": [],
+            "visualization": "line",
+            "visualization_config": {
+              "interpolation": "linear"
+            },
+            "formatting_settings": null,
+            "rollup": true,
+            "event_annotation": false
+          }
+        },
+        {
+          "id": "437ffcf1-c474-4af8-ad32-1e98c8184be6",
+          "type": "aggregation",
+          "filter": null,
+          "timerange": {
+            "type": "relative",
+            "from": 300
+          },
+          "query": {
+            "type": "elasticsearch",
+            "query_string": ""
+          },
+          "streams": [
+            "{{ metricbeat_stream_id }}"
+          ],
+          "config": {
+            "row_pivots": [
+              {
+                "field": "timestamp",
+                "type": "time",
+                "config": {
+                  "interval": {
+                    "type": "auto",
+                    "scaling": 1.0
+                  }
+                }
+              }
+            ],
+            "column_pivots": [],
+            "series": [
+              {
+                "config": {
+                  "name": "Network IN bytes"
+                },
+                "function": "sum(metricbeat_system_network_in_bytes)"
+              },
+              {
+                "config": {
+                  "name": "Network OUT bytes"
+                },
+                "function": "sum(metricbeat_system_network_out_bytes)"
+              }
+            ],
+            "sort": [],
+            "visualization": "line",
+            "visualization_config": {
+              "interpolation": "linear"
+            },
+            "formatting_settings": null,
+            "rollup": true,
+            "event_annotation": false
+          }
+        }
+      ],
+      "widget_mapping": {
+        "3cd164f1-3bcf-4147-a773-f37d32397aee": [
+          "47e17614-092c-4b2f-8e9f-ea0d7cfb10c6"
+        ],
+        "4ddc42c6-5812-4475-87af-de6b8093e90f": [
+          "020e07f6-1eb7-41d0-ab62-906b65dfdbea"
+        ],
+        "ef6d659a-f5f7-48df-b2bc-0b8bedbef27d": [
+          "47101150-54da-49d7-895e-3f2f7b2e58aa"
+        ],
+        "437ffcf1-c474-4af8-ad32-1e98c8184be6": [
+          "0e252691-93a2-4f9d-a1dd-243d8f278526"
+        ],
+        "aa72d504-6419-4866-ad1f-68911b5298a8": [
+          "649f1555-d16c-4640-aba0-4b7cb6112db0"
+        ],
+        "e68fb373-f7b3-4a27-8f48-1d5895262d53": [
+          "40cd9c8f-213a-40cd-b9be-b865d138492d"
+        ],
+        "88166c59-f26f-46d7-bced-11aed2f320c8": [
+          "e37f43a5-9d6b-40cc-84e9-91ee06d1ead6"
+        ]
+      },
+      "positions": {
+        "88166c59-f26f-46d7-bced-11aed2f320c8": {
+          "col": 1,
+          "row": 1,
+          "height": 2,
+          "width": 3
+        },
+        "e68fb373-f7b3-4a27-8f48-1d5895262d53": {
+          "col": 4,
+          "row": 1,
+          "height": 2,
+          "width": 3
+        },
+        "aa72d504-6419-4866-ad1f-68911b5298a8": {
+          "col": 5,
+          "row": 3,
+          "height": 4,
+          "width": 4
+        },
+        "437ffcf1-c474-4af8-ad32-1e98c8184be6": {
+          "col": 1,
+          "row": 3,
+          "height": 4,
+          "width": 4
+        },
+        "ef6d659a-f5f7-48df-b2bc-0b8bedbef27d": {
+          "col": 7,
+          "row": 1,
+          "height": 2,
+          "width": 3
+        },
+        "4ddc42c6-5812-4475-87af-de6b8093e90f": {
+          "col": 10,
+          "row": 1,
+          "height": 2,
+          "width": 3
+        },
+        "3cd164f1-3bcf-4147-a773-f37d32397aee": {
+          "col": 9,
+          "row": 3,
+          "height": 4,
+          "width": 4
+        }
+      },
+      "formatting": {
+        "highlighting": []
+      },
+      "display_mode_settings": {
+        "positions": {}
+      }
+    }
+  },
+  "owner": "admin",
+  "created_at": "2025-12-25T06:57:40.462Z"
+}

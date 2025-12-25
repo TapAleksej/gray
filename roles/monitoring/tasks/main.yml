@@ -30,14 +30,8 @@
 - import_tasks: stream.yml
   tags: metrica
 
+- import_tasks: search.yml
+  tags: metrica
+
 - import_tasks: dashboard.yml
-  tags: dashboard
-
-#- name: DEBUG global vars
-#  debug:
-#    msg:
-#      - "graylog_api_url={{ graylog_api_url }}"
-#      - "graylog_root_user={{ graylog_root_user }}"
-#      - "beats_port={{ beats_port }}"
-#  tags: metrica
-
+  tags: metrica

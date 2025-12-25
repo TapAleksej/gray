@@ -1,0 +1,1 @@
+{"type":"ApiError","message":"Unable to map property views.\nKnown properties include: timerange, streams, query_string, fields_in_order, limit, time_zone, chunk_size"}

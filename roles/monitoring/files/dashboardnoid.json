@@ -1,7 +1,7 @@
 {
     "id": "694ce490fa86b80d109fce24",
     "type": "DASHBOARD",
-    "title": "Server Health2",
+    "title": "Server Health",
     "summary": "",
     "description": "",
     "search_id": "694cf034fa86b80d109fce8a",
@@ -67,61 +67,6 @@
                     }
                 },
                 {
-                    "id": "ef6d659a-f5f7-48df-b2bc-0b8bedbef27d",
-                    "type": "aggregation",
-                    "filter": null,
-                    "timerange": {
-                        "type": "relative",
-                        "from": 300
-                    },
-                    "query": {
-                        "type": "elasticsearch",
-                        "query_string": "metricbeat_system_load_1:>0"
-                    },
-                    "streams": [
-                        "694be03bfaa88401f71630be"
-                    ],
-                    "config": {
-                        "row_pivots": [
-                            {
-                                "field": "timestamp",
-                                "type": "time",
-                                "config": {
-                                    "interval": {
-                                        "type": "timeunit",
-                                        "value": 1,
-                                        "unit": "minutes"
-                                    }
-                                }
-                            }
-                        ],
-                        "column_pivots": [],
-                        "series": [
-                            {
-                                "config": {
-                                    "name": "LA (1 min)"
-                                },
-                                "function": "avg(metricbeat_system_load_1)"
-                            }
-                        ],
-                        "sort": [],
-                        "visualization": "line",
-                        "visualization_config": {
-                            "interpolation": "linear"
-                        },
-                        "formatting_settings": {
-                            "chart_colors": [
-                                {
-                                    "field_name": "LA (1 min)",
-                                    "chart_color": "#9869b9"
-                                }
-                            ]
-                        },
-                        "rollup": true,
-                        "event_annotation": false
-                    }
-                },
-                {
                     "id": "4ddc42c6-5812-4475-87af-de6b8093e90f",
                     "type": "aggregation",
                     "filter": null,
@@ -159,54 +104,6 @@
                         "visualization": "bar",
                         "visualization_config": {
                             "barmode": "group"
-                        },
-                        "formatting_settings": null,
-                        "rollup": true,
-                        "event_annotation": false
-                    }
-                },
-                {
-                    "id": "e68fb373-f7b3-4a27-8f48-1d5895262d53",
-                    "type": "aggregation",
-                    "filter": null,
-                    "timerange": {
-                        "type": "relative",
-                        "from": 300
-                    },
-                    "query": {
-                        "type": "elasticsearch",
-                        "query_string": "metricbeat_system_load_5:>0"
-                    },
-                    "streams": [
-                        "694be03bfaa88401f71630be"
-                    ],
-                    "config": {
-                        "row_pivots": [
-                            {
-                                "field": "timestamp",
-                                "type": "time",
-                                "config": {
-                                    "interval": {
-                                        "type": "timeunit",
-                                        "value": 1,
-                                        "unit": "minutes"
-                                    }
-                                }
-                            }
-                        ],
-                        "column_pivots": [],
-                        "series": [
-                            {
-                                "config": {
-                                    "name": "LA (5 min)"
-                                },
-                                "function": "avg(metricbeat_system_load_5)"
-                            }
-                        ],
-                        "sort": [],
-                        "visualization": "line",
-                        "visualization_config": {
-                            "interpolation": "linear"
                         },
                         "formatting_settings": null,
                         "rollup": true,
@@ -264,6 +161,109 @@
                                 }
                             ]
                         },
+                        "rollup": true,
+                        "event_annotation": false
+                    }
+                },
+                {
+                    "id": "ef6d659a-f5f7-48df-b2bc-0b8bedbef27d",
+                    "type": "aggregation",
+                    "filter": null,
+                    "timerange": {
+                        "type": "relative",
+                        "from": 300
+                    },
+                    "query": {
+                        "type": "elasticsearch",
+                        "query_string": "metricbeat_system_load_1:>0"
+                    },
+                    "streams": [
+                        "694be03bfaa88401f71630be"
+                    ],
+                    "config": {
+                        "row_pivots": [
+                            {
+                                "field": "timestamp",
+                                "type": "time",
+                                "config": {
+                                    "interval": {
+                                        "type": "timeunit",
+                                        "value": 1,
+                                        "unit": "minutes"
+                                    }
+                                }
+                            }
+                        ],
+                        "column_pivots": [],
+                        "series": [
+                            {
+                                "config": {
+                                    "name": "LA (1 min)"
+                                },
+                                "function": "avg(metricbeat_system_load_1)"
+                            }
+                        ],
+                        "sort": [],
+                        "visualization": "line",
+                        "visualization_config": {
+                            "interpolation": "linear"
+                        },
+                        "formatting_settings": {
+                            "chart_colors": [
+                                {
+                                    "field_name": "LA (1 min)",
+                                    "chart_color": "#9869b9"
+                                }
+                            ]
+                        },
+                        "rollup": true,
+                        "event_annotation": false
+                    }
+                },
+                {
+                    "id": "e68fb373-f7b3-4a27-8f48-1d5895262d53",
+                    "type": "aggregation",
+                    "filter": null,
+                    "timerange": {
+                        "type": "relative",
+                        "from": 300
+                    },
+                    "query": {
+                        "type": "elasticsearch",
+                        "query_string": "metricbeat_system_load_5:>0"
+                    },
+                    "streams": [
+                        "694be03bfaa88401f71630be"
+                    ],
+                    "config": {
+                        "row_pivots": [
+                            {
+                                "field": "timestamp",
+                                "type": "time",
+                                "config": {
+                                    "interval": {
+                                        "type": "timeunit",
+                                        "value": 1,
+                                        "unit": "minutes"
+                                    }
+                                }
+                            }
+                        ],
+                        "column_pivots": [],
+                        "series": [
+                            {
+                                "config": {
+                                    "name": "LA (5 min)"
+                                },
+                                "function": "avg(metricbeat_system_load_5)"
+                            }
+                        ],
+                        "sort": [],
+                        "visualization": "line",
+                        "visualization_config": {
+                            "interpolation": "linear"
+                        },
+                        "formatting_settings": null,
                         "rollup": true,
                         "event_annotation": false
                     }

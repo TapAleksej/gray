@@ -1,17 +1,44 @@
 ---
+- name: Get existing views
+  uri:
+    url: "{{ graylog_api_url }}/views"
+    method: GET
+    user: "{{ graylog_root_user }}"
+    password: "{{ graylog_root_password }}"
+    force_basic_auth: true
+    validate_certs: false
+    headers:
+      X-Requested-By: ansible
+  register: views_list
 
-- name: Check existing dashboards
-  shell: |
-    curl -sk -u {{ graylog_root_user }}:{{ graylog_root_password }} \
-      {{ graylog_api_url }}/views/dashboards
-  register: dashboards_raw
-  changed_when: false
+- name: Check if Metricbeat dashboard exists
+  set_fact:
+    dashboard_exists: >-
+      {{
+        views_list.json.views
+        | selectattr('title', 'equalto', 'Server Health')
+        | list
+        | length > 0
+      }}
 
-- name: Import Metricbeat dashboard
+- name: Render dashboard JSON from template
+  template:
+    src: dashboard_metricbeat.json.j2
+    dest: /tmp/dashboard_metricbeat.json
+    mode: '0644'
+  when: not dashboard_exists
+
+- name: Import Metricbeat dashboard via curl
   shell: |
     curl -sk -u {{ graylog_root_user }}:{{ graylog_root_password }} \
       -H "X-Requested-By: ansible" \
       -H "Content-Type: application/json" \
-      -X POST {{ graylog_api_url }}/views/dashboards \
-      -d @{{ role_path }}/files/dashboard_metricbeat.json
-  when: dashboards_raw.stdout is not search("Metricbeat")
+      -X POST \
+      "{{ graylog_api_url }}/views" \
+      -d @/tmp/dashboard_metricbeat.json
+  register: dashboard_import
+  changed_when: dashboard_import.stdout is search('"id"')
+  failed_when: >
+    dashboard_import.rc != 0
+    or dashboard_import.stdout is search("ApiError")
+  when: not dashboard_exists

@@ -1,0 +1,46 @@
+# roles/monitoring/tasks/search.yml
+- name: Create Metricbeat search
+  uri:
+    url: "{{ graylog_api_url }}/views/search"
+    method: POST
+    user: "{{ graylog_root_user }}"
+    password: "{{ graylog_root_password }}"
+    force_basic_auth: true
+    validate_certs: false
+    headers:
+      X-Requested-By: ansible
+      Content-Type: application/json
+    body_format: json
+    body:
+      queries:
+        - id: metricbeat-query
+          query:
+            type: elasticsearch
+            query_string: "*"
+          timerange:
+            type: relative
+            from: 300
+          filter:
+            type: stream
+            id: "{{ metricbeat_stream_id }}"
+          search_types:
+            - id: metricbeat-aggregation
+              type: aggregation
+              name: Metricbeat Aggregation
+              query_id: metricbeat-query
+              filter: null
+              timerange: null
+              streams: []
+              config:
+                row_pivots: []
+                column_pivots: []
+                series: []
+                sort: []
+                visualization: table
+                visualization_config: {}
+    status_code: 201
+  register: metricbeat_search
+
+- name: Set search_id fact
+  set_fact:
+    metricbeat_search_id: "{{ metricbeat_search.json.id }}"
