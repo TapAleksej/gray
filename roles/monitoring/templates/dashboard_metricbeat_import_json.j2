@@ -8,6 +8,18 @@
   "requires": {},
   "state": {
     "metricbeat-query": {
+       "titles": {
+          "widget": {
+            "la1": "LA (1 min) by timestamp",
+            "la5": "LA (5 min) by timestamp",
+            "la15": "LA (15 min) by timestamp",
+            "cpu-usage": "CPU usage (%)",
+            "memory_used": "avg Memory Usage (%)",
+            "netwok-bytes": "in/out in bytes",
+            "disk-usage": "Disk Usage (%)"
+          }
+       },
+
       "widgets": [
         {
           "id": "cpu-usage",
@@ -56,7 +68,7 @@
             "event_annotation": false
           }
         },
-               {
+        {
           "id": "memory_used",
           "type": "aggregation",
           "filter": null,
@@ -66,7 +78,7 @@
           },
           "query": {
             "type": "elasticsearch",
-            "query_string": "metricbeat_system_memory_used_pct:>0"
+            "query_string": "metricbeat_system_memory_actual_used_pct:>0"
           },
           "streams": [
             "{{ metricbeat_stream_id }}"
@@ -91,7 +103,7 @@
                 "config": {
                   "name": "Memory Usage (%)"
                 },
-                "function": "avg(metricbeat_system_memory_used_pct)"
+                "function": "avg(metricbeat_system_memory_actual_used_pct)"
               }
             ],
             "sort": [],
@@ -103,12 +115,271 @@
             "rollup": true,
             "event_annotation": false
           }
+        },
+        {
+          "id": "disk-usage",
+          "type": "aggregation",
+          "filter": null,
+          "timerange": {
+            "type": "relative",
+            "from": 300
+          },
+          "query": {
+            "type": "elasticsearch",
+            "query_string": ""
+          },
+          "streams": [
+            "{{ metricbeat_stream_id }}"
+          ],
+          "config": {
+            "row_pivots": [
+              {
+                "field": "metricbeat_system_filesystem_mount_point",
+                "type": "values",
+                "config": {
+                  "limit": 15
+                }
+              }
+            ],
+            "column_pivots": [],
+            "series": [
+              {
+                "config": {
+                  "name": "Disk Usage"
+                },
+                "function": "avg(metricbeat_system_filesystem_used_pct)"
+              }
+            ],
+            "sort": [],
+            "visualization": "bar",
+            "visualization_config": {
+              "barmode": "group"
+            },
+            "formatting_settings": null,
+            "rollup": true,
+            "event_annotation": false
+          }
+        },
+        {
+          "id": "netwok-bytes",
+          "type": "aggregation",
+          "filter": null,
+          "timerange": {
+            "type": "relative",
+            "from": 300
+          },
+          "query": {
+            "type": "elasticsearch",
+            "query_string": ""
+          },
+          "streams": [
+            "{{ metricbeat_stream_id }}"
+          ],
+          "config": {
+            "row_pivots": [
+              {
+                "field": "timestamp",
+                "type": "time",
+                "config": {
+                  "interval": {
+                    "type": "auto",
+                    "scaling": 1.0
+                  }
+                }
+              }
+            ],
+            "column_pivots": [],
+            "series": [
+              {
+                "config": {
+                  "name": "Network IN bytes"
+                },
+                "function": "sum(metricbeat_system_network_in_bytes)"
+              },
+              {
+                "config": {
+                  "name": "Network OUT bytes"
+                },
+                "function": "sum(metricbeat_system_network_out_bytes)"
+              }
+            ],
+            "sort": [],
+            "visualization": "line",
+            "visualization_config": {
+              "interpolation": "linear"
+            },
+            "formatting_settings": null,
+            "rollup": true,
+            "event_annotation": false
+          }
+        },
+        {
+          "id": "la1",
+          "type": "aggregation",
+          "filter": null,
+          "timerange": {
+            "type": "relative",
+            "from": 300
+          },
+          "query": {
+            "type": "elasticsearch",
+            "query_string": "metricbeat_system_load_1:>0"
+          },
+          "streams": [
+            "{{ metricbeat_stream_id }}"
+          ],
+          "config": {
+            "row_pivots": [
+              {
+                "field": "timestamp",
+                "type": "time",
+                "config": {
+                  "interval": {
+                    "type": "timeunit",
+                    "value": 1,
+                    "unit": "minutes"
+                  }
+                }
+              }
+            ],
+            "column_pivots": [],
+            "series": [
+              {
+                "config": {
+                  "name": "LA (1 min)"
+                },
+                "function": "avg(metricbeat_system_load_1)"
+              }
+            ],
+            "sort": [],
+            "visualization": "line",
+            "visualization_config": {
+              "interpolation": "linear"
+            },
+            "formatting_settings": {
+              "chart_colors": [
+                {
+                  "field_name": "LA (1 min)",
+                  "chart_color": "#9869b9"
+                }
+              ]
+            },
+            "rollup": true,
+            "event_annotation": false
+          }
+        },
+        {
+          "id": "la5",
+          "type": "aggregation",
+          "filter": null,
+          "timerange": {
+            "type": "relative",
+            "from": 300
+          },
+          "query": {
+            "type": "elasticsearch",
+            "query_string": "metricbeat_system_load_5:>0"
+          },
+          "streams": [
+            "{{ metricbeat_stream_id }}"
+          ],
+          "config": {
+            "row_pivots": [
+              {
+                "field": "timestamp",
+                "type": "time",
+                "config": {
+                  "interval": {
+                    "type": "timeunit",
+                    "value": 1,
+                    "unit": "minutes"
+                  }
+                }
+              }
+            ],
+            "column_pivots": [],
+            "series": [
+              {
+                "config": {
+                  "name": "LA (5 min)"
+                },
+                "function": "avg(metricbeat_system_load_5)"
+              }
+            ],
+            "sort": [],
+            "visualization": "line",
+            "visualization_config": {
+              "interpolation": "linear"
+            },
+            "formatting_settings": null,
+            "rollup": true,
+            "event_annotation": false
+          }
+        },
+        {
+          "id": "la15",
+          "type": "aggregation",
+          "filter": null,
+          "timerange": {
+            "type": "relative",
+            "from": 300
+          },
+          "query": {
+            "type": "elasticsearch",
+            "query_string": "metricbeat_system_load_15:>0"
+          },
+          "streams": [
+            "{{ metricbeat_stream_id }}"
+          ],
+          "config": {
+            "row_pivots": [
+              {
+                "field": "timestamp",
+                "type": "time",
+                "config": {
+                  "interval": {
+                    "type": "timeunit",
+                    "value": 1,
+                    "unit": "minutes"
+                  }
+                }
+              }
+            ],
+            "column_pivots": [],
+            "series": [
+              {
+                "config": {
+                  "name": "LA (15 min)"
+                },
+                "function": "avg(metricbeat_system_load_15)"
+              }
+            ],
+            "sort": [],
+            "visualization": "line",
+            "visualization_config": {
+              "interpolation": "linear"
+            },
+            "formatting_settings": {
+              "chart_colors": [
+                {
+                  "field_name": "LA (15 min)",
+                  "chart_color": "#ff6f00"
+                }
+              ]
+            },
+            "rollup": true,
+            "event_annotation": false
+          }
         }
-
       ],
       "widget_mapping": {
         "cpu-usage": ["cpu-search-type"],
-        "memory_used": ["memory-search-type"]
+        "memory_used": ["memory-search-type"],
+        "disk-usage": ["disk-search-type"],
+        "netwok-bytes": ["network-search-type"],
+        "la1": ["la1-search-type"],
+        "la5": ["la5-search-type"],
+        "la15": ["la15-search-type"]
       },
       "positions": {
         "cpu-usage": {
@@ -122,6 +393,36 @@
           "row": 3,
           "height": 4,
           "width": 4
+        },
+        "disk-usage":{
+          "col": 10,
+          "row": 1,
+          "height": 2,
+          "width": 3
+        },
+        "netwok-bytes":{
+          "col": 1,
+          "row": 3,
+          "height": 4,
+          "width": 4
+        },
+        "la1": {
+          "col": 7,
+          "row": 1,
+          "height": 2,
+          "width": 3
+        },
+        "la5": {
+          "col": 4,
+          "row": 1,
+          "height": 2,
+          "width": 3
+        },
+        "la15": {
+          "col": 1,
+          "row": 1,
+          "height": 2,
+          "width": 3
         }
       },
       "formatting": {

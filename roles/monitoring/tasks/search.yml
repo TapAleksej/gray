@@ -32,6 +32,26 @@
               type: messages
               name: Metricbeat Messages
               limit: 1
+            - id: disk-search-type
+              type: messages
+              name: Metricbeat Messages
+              limit: 1
+            - id: network-search-type
+              type: messages
+              name: Metricbeat Messages
+              limit: 1
+            - id: la1-search-type
+              type: messages
+              name: Metricbeat Messages
+              limit: 1
+            - id: la5-search-type
+              type: messages
+              name: Metricbeat Messages
+              limit: 1
+            - id: la15-search-type
+              type: messages
+              name: Metricbeat Messages
+              limit: 1
     status_code: 201
   register: metricbeat_search
 
